@@ -2,6 +2,7 @@ import Instructor from "../../instructor/domain/instructor";
 import Student from "../../student/domain/student";
 import { Category } from "./category";
 import Enrollment from "./enrollment";
+import { Status } from "./status";
 
 export default class Lecture {
   private lectureInstructor: Instructor;
@@ -12,7 +13,7 @@ export default class Lecture {
   private lectureDesc: string;
   private lecturePrice: number;
   private studentNum: number;
-  private status: string;
+  private lectureStatus: Status;
   private createdAt: Date;
   private updatedAt: Date;
 
@@ -38,7 +39,7 @@ export default class Lecture {
     this.lecturePrice = price;
     this.lectureCategory = category;
     this.studentNum = 0;
-    this.status = "close";
+    this.lectureStatus = Status.PRIVATE;
     this.createdAt = new Date();
     this.updatedAt = new Date();
   }
@@ -61,6 +62,10 @@ export default class Lecture {
 
   public students(): Enrollment[] {
     return this.enrollmentStudents;
+  }
+
+  public status(): Status {
+    return this.lectureStatus;
   }
 
   public enrollStudent(student: Student): void {

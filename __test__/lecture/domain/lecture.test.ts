@@ -1,6 +1,7 @@
 import Instructor from "../../../src/instructor/domain/instructor";
 import { Category } from "../../../src/lecture/domain/category";
 import Lecture from "../../../src/lecture/domain/lecture";
+import { Status } from "../../../src/lecture/domain/status";
 import Student from "../../../src/student/domain/student";
 
 describe("lecture test", () => {
@@ -21,6 +22,7 @@ describe("lecture test", () => {
     expect(lecture.numOfStudent()).toBe(0);
     expect(lecture.category()).toBe(Category.APP);
     expect(lecture.instructor()).toBe(instructor);
+    expect(lecture.status()).toBe(Status.PRIVATE);
   });
 
   test("강의 수강 테스트", () => {
