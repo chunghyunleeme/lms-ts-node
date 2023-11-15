@@ -1,4 +1,5 @@
 import Student from "../../student/domain/student";
+import { Category } from "./category";
 import Enrollment from "./enrollment";
 
 export default class Lecture {
@@ -6,7 +7,7 @@ export default class Lecture {
   private lectureTitle: string;
   private lectureDesc: string;
   private lecturePrice: number;
-  private category: string;
+  private lectureCategory: Category;
   private studentNum: number;
   private status: string;
   private createdAt: Date;
@@ -24,13 +25,13 @@ export default class Lecture {
     title: string;
     desc: string;
     price: number;
-    category: string;
+    category: Category;
   }) {
     this.lectureId = id;
     this.lectureTitle = title;
     this.lectureDesc = desc;
     this.lecturePrice = price;
-    this.category = category;
+    this.lectureCategory = category;
     this.studentNum = 0;
     this.status = "close";
     this.createdAt = new Date();
@@ -39,6 +40,10 @@ export default class Lecture {
 
   public title(): string {
     return this.lectureTitle;
+  }
+
+  public category(): Category {
+    return this.lectureCategory;
   }
 
   public numOfStudent(): number {
