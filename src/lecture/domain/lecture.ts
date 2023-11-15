@@ -1,32 +1,37 @@
+import Instructor from "../../instructor/domain/instructor";
 import Student from "../../student/domain/student";
 import { Category } from "./category";
 import Enrollment from "./enrollment";
 
 export default class Lecture {
+  private lectureInstructor: Instructor;
+  private enrollmentStudents: Enrollment[] = [];
+  private lectureCategory: Category;
   private lectureId: string;
   private lectureTitle: string;
   private lectureDesc: string;
   private lecturePrice: number;
-  private lectureCategory: Category;
   private studentNum: number;
   private status: string;
   private createdAt: Date;
   private updatedAt: Date;
-  private enrollmentStudents: Enrollment[] = [];
 
   constructor({
+    instructor,
     id,
     title,
     desc,
     price,
     category,
   }: {
+    instructor: Instructor;
     id: string;
     title: string;
     desc: string;
     price: number;
     category: Category;
   }) {
+    this.lectureInstructor = instructor;
     this.lectureId = id;
     this.lectureTitle = title;
     this.lectureDesc = desc;
@@ -36,6 +41,10 @@ export default class Lecture {
     this.status = "close";
     this.createdAt = new Date();
     this.updatedAt = new Date();
+  }
+
+  public instructor(): Instructor {
+    return this.lectureInstructor;
   }
 
   public title(): string {
