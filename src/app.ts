@@ -1,4 +1,6 @@
 import express, { Application, Request, Response, NextFunction } from "express";
+import { createConnection } from "mysql2";
+import db from "./db";
 
 const app: Application = express();
 
