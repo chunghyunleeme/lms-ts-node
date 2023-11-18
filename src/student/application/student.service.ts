@@ -1,5 +1,6 @@
 import { inject } from "tsyringe";
 import IStudentRepository from "../domain/repository/istudent.repository";
+import Student from "../domain/student";
 
 export default class StudentService {
   constructor(
@@ -8,7 +9,13 @@ export default class StudentService {
   ) {}
   async join(email: string, nickName: string) {
     await this.checkDuplicateEmail(email);
-    return this.studentRepository.save({ email, nickName });
+
+    return await this.studentRepository.save(
+      new Student({
+        email,
+        nickName,
+      })
+    );
   }
 
   private async checkDuplicateEmail(email: string) {

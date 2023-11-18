@@ -14,7 +14,6 @@ describe("student service test", () => {
       const email = "test@test.com";
       when(studentRepository.findByEmail(email)).thenResolve(
         new Student({
-          id: "1",
           email,
           nickName: "test",
         })

@@ -9,15 +9,9 @@ import { RowDataPacket } from "mysql2";
 ])
 @injectable()
 export default class DBStudentRepository implements IStudentRepository {
-  async save({
-    email,
-    nickName,
-  }: {
-    email: string;
-    nickName: string;
-  }): Promise<void> {
+  async save(student: Student): Promise<void> {
     const query = "INSERT INTO Student (nickName, email) VALUES (?, ?)";
-    await db.query(query, [nickName, email]);
+    await db.query(query, [student.nickName, student.email]);
     return;
   }
 
@@ -46,7 +40,7 @@ export default class DBStudentRepository implements IStudentRepository {
     }
 
     data = data[0];
-    return new Student({
+    return Student.from({
       id: data.id,
       email: data.email,
       nickName: data.nickName,

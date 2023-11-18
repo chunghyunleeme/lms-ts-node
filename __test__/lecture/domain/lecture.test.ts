@@ -44,7 +44,6 @@ describe("lecture test", () => {
     });
 
     const student = new Student({
-      id: "1",
       email: "test@gmail.com",
       nickName: "test",
     });

@@ -1,9 +1,16 @@
-export default class Student {
-  private studentId: string;
-  private studentEmail: string;
-  private studentNickName: string;
+import { randomUUID } from "crypto";
 
-  constructor({
+export default class Student {
+  private _id: string;
+  private _email: string | null;
+  private _nickName: string;
+
+  constructor({ email, nickName }: { email: string; nickName: string }) {
+    this._email = email;
+    this._nickName = nickName;
+  }
+
+  static from({
     id,
     email,
     nickName,
@@ -12,20 +19,24 @@ export default class Student {
     email: string;
     nickName: string;
   }) {
-    this.studentId = id;
-    this.studentEmail = email;
-    this.studentNickName = nickName;
+    const student = new Student({ email, nickName });
+    student._id = id;
+    return student;
   }
 
-  public id(): string {
-    return this.studentId;
+  get id(): string {
+    return this._id;
   }
 
-  public email(): string {
-    return this.studentEmail;
+  get email(): string | null {
+    return this._email;
   }
 
-  public nickName(): string {
-    return this.studentNickName;
+  get nickName(): string {
+    return this._nickName;
+  }
+
+  public withdrawal(): void {
+    this._email = null;
   }
 }
