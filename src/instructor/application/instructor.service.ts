@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
 import Instructor from "../domain/instructor";
-import IInstructorRepository from "../domain/repository/iinstructor.repository";
+import IInstructorRepository from "../domain/repository/Iinstructor.repository";
 
 @injectable()
 export default class InstructorService {

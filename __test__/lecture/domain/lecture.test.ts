@@ -1,5 +1,5 @@
-import Instructor from "../../../src/instructor/domain/instructor";
 import { Category } from "../../../src/lecture/domain/category";
+import { Instructor } from "../../../src/lecture/domain/instructor";
 import Enrollment from "../../../src/lecture/domain/enrollment";
 import Lecture from "../../../src/lecture/domain/lecture";
 import { Status } from "../../../src/lecture/domain/status";
@@ -9,10 +9,12 @@ describe("lecture test", () => {
   beforeEach(() => {});
 
   test("강의 생성 테스트", () => {
-    const instructor = new Instructor("1", "테스트 교사");
+    const instructor: Instructor = {
+      _id: "1",
+      _name: "테스트",
+    };
     const lecture = new Lecture({
       instructor,
-      id: "1",
       title: "테스트 강의",
       desc: "테스트 설명",
       price: 1000,
@@ -28,10 +30,13 @@ describe("lecture test", () => {
 
   test("강의 수강 테스트", () => {
     // given
-    const instructor = new Instructor("1", "테스트 교사");
+    const instructor: Instructor = {
+      _id: "1",
+      _name: "테스트 교사",
+    };
+
     const lecture = new Lecture({
       instructor,
-      id: "1",
       title: "테스트 강의",
       desc: "테스트 설명",
       price: 1000,

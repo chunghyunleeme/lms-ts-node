@@ -1,71 +1,68 @@
-import Instructor from "../../instructor/domain/instructor";
 import Student from "../../student/domain/student";
 import { Category } from "./category";
 import Enrollment from "./enrollment";
+import { Instructor } from "./instructor";
 import { Status } from "./status";
 
 export default class Lecture {
-  private lectureInstructor: Instructor;
-  private enrollmentStudents: Enrollment[] = [];
-  private lectureCategory: Category;
-  private lectureId: string;
-  private lectureTitle: string;
-  private lectureDesc: string;
-  private lecturePrice: number;
-  private studentNum: number;
-  private lectureStatus: Status;
-  private createdAt: Date;
-  private updatedAt: Date;
+  private _id: string;
+  private _instructor: Instructor;
+  private _students: Enrollment[] = [];
+  private _category: Category;
+  private _title: string;
+  private _desc: string;
+  private _price: number;
+  private _status: Status;
+  private _numOfStudent: number;
+  private _createdAt: Date;
+  private _updatedAt: Date;
 
   constructor({
     instructor,
-    id,
     title,
     desc,
     price,
     category,
   }: {
     instructor: Instructor;
-    id: string;
     title: string;
     desc: string;
     price: number;
     category: Category;
   }) {
-    this.lectureInstructor = instructor;
-    this.lectureId = id;
-    this.lectureTitle = title;
-    this.lectureDesc = desc;
-    this.lecturePrice = price;
-    this.lectureCategory = category;
-    this.studentNum = 0;
-    this.lectureStatus = Status.PRIVATE;
-    this.createdAt = new Date();
-    this.updatedAt = new Date();
+    this._instructor = instructor;
+    this._title = title;
+    this._desc = desc;
+    this._price = price;
+    this._category = category;
+    this._numOfStudent = 0;
+    this._status = Status.PRIVATE;
+    this._createdAt = new Date();
+    this._updatedAt = new Date();
   }
 
   public instructor(): Instructor {
-    return this.lectureInstructor;
+    return this._instructor;
   }
 
   public title(): string {
-    return this.lectureTitle;
+    return this._title;
   }
 
   public category(): Category {
-    return this.lectureCategory;
+    return this._category;
   }
 
   public numOfStudent(): number {
-    return this.studentNum;
+    return this._numOfStudent;
   }
 
   public students(): Enrollment[] {
-    return this.enrollmentStudents;
+    return this._students;
   }
 
   public status(): Status {
-    return this.lectureStatus;
+    return this._status;
   }
 
   public enrollment(student: Student): Enrollment {
@@ -74,7 +71,7 @@ export default class Lecture {
       student,
     });
 
-    this.enrollmentStudents.push(enrollment);
+    this._students.push(enrollment);
 
     return enrollment;
   }
