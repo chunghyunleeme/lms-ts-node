@@ -1,5 +1,6 @@
 import Instructor from "../../../src/instructor/domain/instructor";
 import { Category } from "../../../src/lecture/domain/category";
+import Enrollment from "../../../src/lecture/domain/enrollment";
 import Lecture from "../../../src/lecture/domain/lecture";
 import { Status } from "../../../src/lecture/domain/status";
 import Student from "../../../src/student/domain/student";
@@ -44,9 +45,9 @@ describe("lecture test", () => {
     });
 
     // when
-    lecture.enrollStudent(student);
+    const enrollment: Enrollment = lecture.enrollment(student);
 
     // then
-    expect(lecture.students()[0].student).toBe(student);
+    expect(enrollment.student).toBe(student);
   });
 });

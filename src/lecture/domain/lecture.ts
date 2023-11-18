@@ -68,12 +68,14 @@ export default class Lecture {
     return this.lectureStatus;
   }
 
-  public enrollStudent(student: Student): void {
+  public enrollment(student: Student): Enrollment {
     const enrollment = new Enrollment({
       lecture: this,
       student,
     });
 
     this.enrollmentStudents.push(enrollment);
+
+    return enrollment;
   }
 }
