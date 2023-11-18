@@ -1,17 +1,17 @@
 export default class Instructor {
-  private instructorId: string;
-  private instructorName: string;
+  private _id: string;
+  private _name: string;
 
   constructor(id: string, name: string) {
-    this.instructorId = id;
-    this.instructorName = name;
+    this._id = id;
+    this._name = name;
   }
 
-  public id() {
-    return this.instructorId;
+  public get id() {
+    return this._id;
   }
 
-  public name() {
-    return this.instructorName;
+  public get name() {
+    return this._name;
   }
 }

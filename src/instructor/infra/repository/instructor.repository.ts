@@ -19,7 +19,6 @@ export default class DBInstructorRepository implements IInstructorRepository {
     ]);
     const instructorData: RowDataPacket[0] = result[0];
 
-    console.log("instructorData = ", instructorData);
     const instructor: Instructor = this.mapToDomainEntity(instructorData[0]);
 
     return instructor;
