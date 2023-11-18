@@ -1,14 +1,17 @@
 import { Category } from "../domain/category";
+import Enrollment from "../domain/enrollment";
 import { Instructor } from "../domain/instructor";
 import Lecture from "../domain/lecture";
 import ILectureRepository from "../domain/repository/ilecture.repository";
 import { Status } from "../domain/status";
 import { IInstructorService } from "./adapter/iinstructor.service";
+import { IStudentService } from "./adapter/istudent.service";
 
 export default class LectureService {
   constructor(
     private readonly lectureRepository: ILectureRepository,
-    private readonly instructorService: IInstructorService
+    private readonly instructorService: IInstructorService,
+    private readonly studentService: IStudentService
   ) {}
 
   async save({
@@ -44,6 +47,28 @@ export default class LectureService {
         price,
         category,
       })
+    );
+  }
+
+  async enroll({
+    lectureId,
+    studentId,
+  }: {
+    lectureId: string;
+    studentId: string;
+  }) {
+    const lecture = await this.lectureRepository.findById(lectureId);
+    if (!lecture) {
+      throw new Error("존재하지 않는 강의입니다.");
+    }
+
+    const student = await this.studentService.findById(studentId);
+    if (!student) {
+      throw new Error("존재하지 않는 학생입니다.");
+    }
+
+    return await this.lectureRepository.saveEnrollment(
+      lecture.enrollment(student)
     );
   }
 }

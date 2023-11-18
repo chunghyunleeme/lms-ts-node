@@ -4,11 +4,9 @@ import Student from "../../domain/student";
 import db from "../../../db";
 import { RowDataPacket } from "mysql2";
 
-@registry([
-  { token: "InstructorRepository", useValue: "DBInstructorRepository" },
-])
+@registry([{ token: "InstructorRepository", useValue: "InstructorRepository" }])
 @injectable()
-export default class DBStudentRepository implements IStudentRepository {
+export default class StudentRepository implements IStudentRepository {
   async save(student: Student): Promise<void> {
     const query = "INSERT INTO Student (nickName, email) VALUES (?, ?)";
     await db.query(query, [student.nickName, student.email]);

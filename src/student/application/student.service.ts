@@ -2,7 +2,7 @@ import { inject } from "tsyringe";
 import IStudentRepository from "../domain/repository/istudent.repository";
 import Student from "../domain/student";
 
-export default class StudentService {
+export class StudentService {
   constructor(
     @inject("StudentRepository")
     private readonly studentRepository: IStudentRepository
@@ -16,6 +16,10 @@ export default class StudentService {
         nickName,
       })
     );
+  }
+
+  public async findById(id: string) {
+    return await this.studentRepository.findById(id);
   }
 
   private async checkDuplicateEmail(email: string) {

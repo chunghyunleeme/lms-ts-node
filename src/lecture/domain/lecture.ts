@@ -41,6 +41,10 @@ export default class Lecture {
     this._updatedAt = new Date();
   }
 
+  get id(): string {
+    return this._id;
+  }
+
   get instructor(): Instructor {
     return this._instructor;
   }

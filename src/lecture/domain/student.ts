@@ -1,5 +1,5 @@
 export type Student = {
-  _id: string;
-  _email: string | null;
-  _nickName: string;
+  id: string;
+  email: string | null;
+  nickName: string;
 };
