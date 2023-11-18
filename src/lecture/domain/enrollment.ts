@@ -1,5 +1,5 @@
-import Student from "../../student/domain/student";
 import Lecture from "./lecture";
+import { Student } from "./student";
 
 export default class Enrollment {
   readonly enrollmentDate: Date;

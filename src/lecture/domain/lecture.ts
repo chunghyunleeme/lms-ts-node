@@ -1,8 +1,8 @@
-import Student from "../../student/domain/student";
 import { Category } from "./category";
 import Enrollment from "./enrollment";
 import { Instructor } from "./instructor";
 import { Status } from "./status";
+import { Student } from "./student";
 
 export default class Lecture {
   private _id: string;
@@ -41,37 +41,45 @@ export default class Lecture {
     this._updatedAt = new Date();
   }
 
-  public instructor(): Instructor {
+  get instructor(): Instructor {
     return this._instructor;
   }
 
-  public title(): string {
+  get title(): string {
     return this._title;
   }
 
-  public category(): Category {
+  get category(): Category {
     return this._category;
   }
 
-  public numOfStudent(): number {
+  get numOfStudent(): number {
     return this._numOfStudent;
   }
 
-  public students(): Enrollment[] {
+  get students(): Enrollment[] {
     return this._students;
   }
 
-  public status(): Status {
+  get status(): Status {
     return this._status;
   }
 
+  public open(): void {
+    this._status = Status.PUBLIC;
+  }
+
   public enrollment(student: Student): Enrollment {
+    if (this.status == Status.PRIVATE) {
+      throw new Error("비공개된 강의는 수강 신청할 수 없습니다.");
+    }
     const enrollment = new Enrollment({
       lecture: this,
       student,
     });
-
     this._students.push(enrollment);
+
+    ++this._numOfStudent;
 
     return enrollment;
   }
