@@ -1,6 +1,7 @@
 import { Category } from "./category";
 import Enrollment from "./enrollment";
 import { Instructor } from "./instructor";
+import Money from "./money";
 import { Status } from "./status";
 import { Student } from "./student";
 
@@ -11,7 +12,7 @@ export default class Lecture {
   private _category: Category;
   private _title: string;
   private _desc: string;
-  private _price: number;
+  private _price: Money;
   private _status: Status;
   private _numOfStudent: number;
   private _createdAt: Date;
@@ -34,7 +35,7 @@ export default class Lecture {
     this._instructor = instructor;
     this._title = title;
     this._desc = desc;
-    this._price = price;
+    this._price = new Money(price);
     this._category = category;
     this._numOfStudent = 0;
     this._status = Status.PRIVATE;
@@ -105,7 +106,7 @@ export default class Lecture {
     return this._desc;
   }
 
-  get price(): number {
+  get price(): Money {
     return this._price;
   }
 
@@ -141,6 +142,42 @@ export default class Lecture {
     this._status = Status.PUBLIC;
   }
 
+  public update({
+    title,
+    desc,
+    price,
+  }: {
+    title?: string;
+    desc?: string;
+    price?: number;
+  }): void {
+    if (title) {
+      this._title = title;
+    }
+
+    if (desc) {
+      this._desc = desc;
+    }
+
+    if (price) {
+      this._price = new Money(price);
+    }
+
+    this._updatedAt = new Date();
+  }
+
+  public delete(): void {
+    if (this._enrollments == undefined) {
+      throw new Error("잘못된 접근입니다.");
+    }
+
+    if (this._enrollments.length != 0) {
+      throw new Error("이미 수강생이 존재하는 강의는 삭제 할 수 없습니다.");
+    }
+
+    this._deletedAt = new Date();
+  }
+
   public enrollment(student: Student): Enrollment {
     if (this._enrollments == undefined) {
       throw new Error("잘못된 접근입니다.");
@@ -167,17 +204,5 @@ export default class Lecture {
     ++this._numOfStudent;
 
     return enrollment;
-  }
-
-  public delete(): void {
-    if (this._enrollments == undefined) {
-      throw new Error("잘못된 접근입니다.");
-    }
-
-    if (this._enrollments.length != 0) {
-      throw new Error("이미 수강생이 존재하는 강의는 삭제 할 수 없습니다.");
-    }
-
-    this._deletedAt = new Date();
   }
 }

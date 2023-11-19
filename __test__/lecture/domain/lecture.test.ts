@@ -28,6 +28,95 @@ describe("lecture test", () => {
     expect(lecture.status).toBe(Status.PRIVATE);
   });
 
+  describe("강의 수정 테스트", () => {
+    it("실패: 가격은 음수일 수 없습니다.", () => {
+      const instructor: Instructor = {
+        id: "1",
+        name: "테스트",
+      };
+      const lecture = new Lecture({
+        instructor,
+        title: "테스트 강의",
+        desc: "테스트 설명",
+        price: 1000,
+        category: Category.APP,
+      });
+
+      expect(() =>
+        lecture.update({
+          title: "update-title",
+          desc: "update-desc",
+          price: -1,
+        })
+      ).toThrow(Error);
+    });
+  });
+
+  describe("강의 삭제 테스트", () => {
+    it("실패: 이미 수강생이 있는 경우", () => {
+      // given
+      const student: Student = {
+        id: "1",
+        nickName: "test",
+      };
+
+      const lecture: Lecture = Lecture.from({
+        id: "1",
+        title: "title",
+        desc: "desc",
+        category: Category.ALGORITHM,
+        price: 1000,
+        status: Status.PUBLIC,
+        numberOfStudent: 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        enrollments: [
+          new Enrollment({
+            lecture: Lecture.from({
+              id: "1",
+              title: "title",
+              desc: "desc",
+              category: Category.ALGORITHM,
+              price: 1000,
+              status: Status.PUBLIC,
+              numberOfStudent: 0,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            }),
+            student: student,
+            enrollmentDate: new Date(),
+          }),
+        ],
+      });
+
+      // when, then
+      expect(() => lecture.delete()).toThrow(
+        new Error("이미 수강생이 존재하는 강의는 삭제 할 수 없습니다.")
+      );
+    });
+
+    it("성공", () => {
+      // given
+      const lecture: Lecture = Lecture.from({
+        id: "1",
+        title: "title",
+        desc: "desc",
+        category: Category.ALGORITHM,
+        price: 1000,
+        status: Status.PRIVATE,
+        numberOfStudent: 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        enrollments: [],
+      });
+
+      // when
+      lecture.delete();
+
+      // when, then
+      expect(lecture.deletedAt).not.toBeNull();
+    });
+  });
   it("강의 공개 테스트", () => {
     const instructor: Instructor = {
       id: "1",
@@ -171,72 +260,6 @@ describe("lecture test", () => {
       expect(enrollment.student).toBe(student);
       expect(enrollment.lecture).toBe(lecture);
       expect(lecture.numOfStudent).toBe(1);
-    });
-  });
-
-  describe("강의 삭제 테스트", () => {
-    it("실패: 이미 수강생이 있는 경우", () => {
-      // given
-      const student: Student = {
-        id: "1",
-        nickName: "test",
-      };
-
-      const lecture: Lecture = Lecture.from({
-        id: "1",
-        title: "title",
-        desc: "desc",
-        category: Category.ALGORITHM,
-        price: 1000,
-        status: Status.PUBLIC,
-        numberOfStudent: 0,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        enrollments: [
-          new Enrollment({
-            lecture: Lecture.from({
-              id: "1",
-              title: "title",
-              desc: "desc",
-              category: Category.ALGORITHM,
-              price: 1000,
-              status: Status.PUBLIC,
-              numberOfStudent: 0,
-              createdAt: new Date(),
-              updatedAt: new Date(),
-            }),
-            student: student,
-            enrollmentDate: new Date(),
-          }),
-        ],
-      });
-
-      // when, then
-      expect(() => lecture.delete()).toThrow(
-        new Error("이미 수강생이 존재하는 강의는 삭제 할 수 없습니다.")
-      );
-    });
-
-    it("성공", () => {
-      // given
-      const lecture: Lecture = Lecture.from({
-        id: "1",
-        title: "title",
-        desc: "desc",
-        category: Category.ALGORITHM,
-        price: 1000,
-        status: Status.PRIVATE,
-        numberOfStudent: 0,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        enrollments: [],
-      });
-
-      // when
-      lecture.delete();
-
-      // when, then
-      expect(lecture.deletedAt).not.toBeNull();
     });
   });
 });
