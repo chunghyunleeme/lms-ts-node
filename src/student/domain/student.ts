@@ -1,9 +1,8 @@
-import { randomUUID } from "crypto";
-
 export default class Student {
   private _id: string;
   private _email: string | null;
   private _nickName: string;
+  private _deletedAt: Date;
 
   constructor({ email, nickName }: { email: string; nickName: string }) {
     this._email = email;
@@ -37,6 +36,8 @@ export default class Student {
   }
 
   public withdrawal(): void {
-    this._email += `/del/${new Date().toISOString()}`;
+    const deleteDate = new Date();
+    this._email += `/${deleteDate.toISOString()}`;
+    this._deletedAt = deleteDate;
   }
 }
