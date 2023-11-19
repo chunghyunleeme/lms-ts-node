@@ -10,8 +10,8 @@ describe("lecture test", () => {
 
   it("강의 생성 테스트", () => {
     const instructor: Instructor = {
-      _id: "1",
-      _name: "테스트",
+      id: "1",
+      name: "테스트",
     };
     const lecture = new Lecture({
       instructor,
@@ -28,12 +28,30 @@ describe("lecture test", () => {
     expect(lecture.status).toBe(Status.PRIVATE);
   });
 
+  it("강의 공개 테스트", () => {
+    const instructor: Instructor = {
+      id: "1",
+      name: "테스트",
+    };
+    const lecture = new Lecture({
+      instructor,
+      title: "테스트 강의",
+      desc: "테스트 설명",
+      price: 1000,
+      category: Category.APP,
+    });
+
+    lecture.open();
+
+    expect(lecture.status).toBe(Status.PUBLIC);
+  });
+
   describe("수강 신청 테스트", () => {
     it("실패: 비공개된 강의인 경우", () => {
       // given
       const instructor: Instructor = {
-        _id: "1",
-        _name: "테스트 교사",
+        id: "1",
+        name: "테스트 교사",
       };
 
       const lecture = new Lecture({
@@ -45,9 +63,9 @@ describe("lecture test", () => {
       });
 
       const student: Student = {
-        _id: "1",
-        _email: "test@gmail.com",
-        _nickName: "test",
+        id: "1",
+        email: "test@gmail.com",
+        nickName: "test",
       };
 
       // when, then
@@ -56,8 +74,8 @@ describe("lecture test", () => {
     it("성공: 강의 수강 테스트", () => {
       // given
       const instructor: Instructor = {
-        _id: "1",
-        _name: "테스트 교사",
+        id: "1",
+        name: "테스트 교사",
       };
 
       const lecture = new Lecture({
@@ -70,9 +88,9 @@ describe("lecture test", () => {
       lecture.open();
 
       const student: Student = {
-        _id: "1",
-        _email: "test@gmail.com",
-        _nickName: "test",
+        id: "1",
+        email: "test@gmail.com",
+        nickName: "test",
       };
 
       // when

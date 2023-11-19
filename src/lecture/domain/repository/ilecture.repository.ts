@@ -4,11 +4,11 @@ import Lecture from "../lecture";
 import { Status } from "../status";
 
 export default interface ILectureRepository {
-  save(lecture: Lecture): Promise<void>;
+  save(lecture: Lecture): Promise<string>;
 
-  findById(id: string): Promise<Lecture>;
+  findById(id: string): Promise<Lecture | null>;
 
-  findByTitle(title: string): Promise<Lecture>;
+  findByTitle(title: string): Promise<Lecture | null>;
 
   saveEnrollment(enrollment: Enrollment): Promise<void>;
 }

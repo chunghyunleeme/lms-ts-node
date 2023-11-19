@@ -6,7 +6,7 @@ import { Student } from "./student";
 
 export default class Lecture {
   private _id: string;
-  private _instructor: Instructor;
+  private _instructor: Instructor | null;
   private _students: Enrollment[] = [];
   private _category: Category;
   private _title: string;
@@ -24,7 +24,7 @@ export default class Lecture {
     price,
     category,
   }: {
-    instructor: Instructor;
+    instructor: Instructor | null;
     title: string;
     desc: string;
     price: number;
@@ -41,16 +41,61 @@ export default class Lecture {
     this._updatedAt = new Date();
   }
 
+  static from({
+    id,
+    title,
+    desc,
+    price,
+    category,
+    status,
+    numberOfStudent,
+    createdAt,
+    updatedAt,
+  }: {
+    id: string;
+    title: string;
+    desc: string;
+    category: string;
+    price: number;
+    status: string;
+    numberOfStudent: number;
+    createdAt: Date;
+    updatedAt: Date;
+  }): Lecture {
+    const lecture = new Lecture({
+      instructor: null,
+      title,
+      desc,
+      price,
+      category: category as Category,
+    });
+
+    lecture._status = status as Status;
+    lecture._numOfStudent = numberOfStudent;
+    lecture._createdAt = createdAt;
+    lecture._updatedAt = updatedAt;
+
+    return lecture;
+  }
+
   get id(): string {
     return this._id;
   }
 
-  get instructor(): Instructor {
+  get instructor(): Instructor | null {
     return this._instructor;
   }
 
   get title(): string {
     return this._title;
+  }
+
+  get desc(): string {
+    return this._desc;
+  }
+
+  get price(): number {
+    return this._price;
   }
 
   get category(): Category {
@@ -67,6 +112,12 @@ export default class Lecture {
 
   get status(): Status {
     return this._status;
+  }
+  get createdAt(): Date {
+    return this._createdAt;
+  }
+  get updatedAt(): Date {
+    return this._updatedAt;
   }
 
   public open(): void {

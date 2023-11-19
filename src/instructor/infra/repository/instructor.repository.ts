@@ -1,14 +1,12 @@
 import db from "../../../db";
 import { injectable, registry } from "tsyringe";
 import Instructor from "../../domain/instructor";
-import IInstructorRepository from "../../domain/repository/iinstructor.repository";
 import { RowDataPacket } from "mysql2";
+import IInstructorRepository from "../../domain/repository/Iinstructor.repository";
 
-@registry([
-  { token: "InstructorRepository", useValue: "DBInstructorRepository" },
-])
+@registry([{ token: "InstructorRepository", useValue: "InstructorRepository" }])
 @injectable()
-export default class DBInstructorRepository implements IInstructorRepository {
+export default class InstructorRepository implements IInstructorRepository {
   async save(name: string): Promise<void> {
     await db.query("INSERT INTO Instructor (name) VALUES (?)", [name]);
   }
