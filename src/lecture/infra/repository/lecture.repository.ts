@@ -25,7 +25,7 @@ export default class LectureRepository implements ILectureRepository {
     return result[0].insertId;
   }
 
-  async findById(id: string): Promise<Lecture | null> {
+  async findById(id: number): Promise<Lecture | null> {
     const result = await db.query("SELECT * FROM lecture WHERE id = ?", [id]);
     const lectureData: RowDataPacket[0] = result[0];
     const lecture: Lecture | null = this.mapToDomainEntity(lectureData);

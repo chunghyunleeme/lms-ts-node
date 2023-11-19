@@ -29,7 +29,7 @@ describe("lecture service test", () => {
       });
       when(lectureRepository.findByTitle(title)).thenResolve(
         Lecture.from({
-          id: "1",
+          id: 1,
           title,
           desc: "desc",
           price: 1000,
@@ -58,13 +58,13 @@ describe("lecture service test", () => {
   describe("강의 수정 테스트", () => {
     it("실패: 존재하지 않는 강의인 경우 수정할 수 없다.", () => {
       // given
-      when(lectureRepository.findById("1")).thenResolve(null);
+      when(lectureRepository.findById(1)).thenResolve(null);
 
       // when, then
       expect(
         async () =>
           await lectureService.update({
-            lectureId: "1",
+            lectureId: 1,
             title: "title",
             desc: "desc",
             price: 1000,
@@ -78,7 +78,7 @@ describe("lecture service test", () => {
       // given
       when(lectureRepository.findByIdWithEnrollments("1")).thenResolve(
         Lecture.from({
-          id: "1",
+          id: 1,
           title: "title",
           desc: "desc",
           price: 1000,

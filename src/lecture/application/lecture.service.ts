@@ -56,7 +56,7 @@ export default class LectureService {
     desc,
     price,
   }: {
-    lectureId: string;
+    lectureId: number;
     title?: string;
     desc?: string;
     price?: number;

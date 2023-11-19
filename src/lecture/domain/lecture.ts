@@ -6,7 +6,7 @@ import { Status } from "./status";
 import { Student } from "./student";
 
 export default class Lecture {
-  private _id: string;
+  private _id: number;
   private _instructor: Instructor | null;
   private _enrollments: Enrollment[] | undefined;
   private _category: Category;
@@ -57,7 +57,7 @@ export default class Lecture {
     instructor,
     enrollments,
   }: {
-    id: string;
+    id: number;
     title: string;
     desc: string;
     category: string;
@@ -90,7 +90,7 @@ export default class Lecture {
     return lecture;
   }
 
-  get id(): string {
+  get id(): number {
     return this._id;
   }
 

@@ -86,7 +86,7 @@ describe("lecture test", () => {
       };
 
       const lecture: Lecture = Lecture.from({
-        id: "1",
+        id: 1,
         title: "title",
         desc: "desc",
         category: Category.ALGORITHM,
@@ -98,7 +98,7 @@ describe("lecture test", () => {
         enrollments: [
           new Enrollment({
             lecture: Lecture.from({
-              id: "1",
+              id: 1,
               title: "title",
               desc: "desc",
               category: Category.ALGORITHM,
@@ -123,7 +123,7 @@ describe("lecture test", () => {
     it("성공", () => {
       // given
       const lecture: Lecture = Lecture.from({
-        id: "1",
+        id: 1,
         title: "title",
         desc: "desc",
         category: Category.ALGORITHM,
@@ -193,7 +193,7 @@ describe("lecture test", () => {
       };
 
       const lecture: Lecture = Lecture.from({
-        id: "1",
+        id: 1,
         title: "title",
         desc: "desc",
         category: Category.ALGORITHM,
@@ -205,7 +205,7 @@ describe("lecture test", () => {
         enrollments: [
           new Enrollment({
             lecture: Lecture.from({
-              id: "1",
+              id: 1,
               title: "title",
               desc: "desc",
               category: Category.ALGORITHM,
@@ -235,7 +235,7 @@ describe("lecture test", () => {
       };
 
       const lecture: Lecture = Lecture.from({
-        id: "1",
+        id: 1,
         title: "title",
         desc: "desc",
         category: Category.ALGORITHM,
@@ -260,7 +260,7 @@ describe("lecture test", () => {
       };
 
       const lecture: Lecture = Lecture.from({
-        id: "1",
+        id: 1,
         title: "title",
         desc: "desc",
         category: Category.ALGORITHM,

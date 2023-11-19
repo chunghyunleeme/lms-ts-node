@@ -6,7 +6,7 @@ import { Status } from "../status";
 export default interface ILectureRepository {
   save(lecture: Lecture): Promise<number>;
 
-  findById(id: string): Promise<Lecture | null>;
+  findById(id: number): Promise<Lecture | null>;
 
   findByIdWithEnrollments(id: string): Promise<Lecture | null>;
 
