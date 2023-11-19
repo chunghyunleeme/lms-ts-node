@@ -12,7 +12,7 @@ export default class InstructorRepository implements IInstructorRepository {
   }
 
   async findById(id: string): Promise<Instructor> {
-    const result = await db.query("SELECT * FROM Instructor WHERE id = ?", [
+    const result = await db.query("SELECT * FROM instructor WHERE id = ?", [
       id,
     ]);
     const instructorData: RowDataPacket[0] = result[0];

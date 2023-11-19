@@ -4,7 +4,7 @@ import Lecture from "../lecture";
 import { Status } from "../status";
 
 export default interface ILectureRepository {
-  save(lecture: Lecture): Promise<string>;
+  save(lecture: Lecture): Promise<number>;
 
   findById(id: string): Promise<Lecture | null>;
 

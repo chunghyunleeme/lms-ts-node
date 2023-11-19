@@ -7,14 +7,14 @@ import { RowDataPacket } from "mysql2";
 @registry([{ token: "LectureRepository", useValue: "LectureRepository" }])
 @injectable()
 export default class LectureRepository implements ILectureRepository {
-  async save(lecture: Lecture): Promise<string> {
+  async save(lecture: Lecture): Promise<number> {
     const query =
       "INSERT INTO lecture (instructor_id, title, description, price, category, status, num_of_students, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     const result: any = await db.query(query, [
       lecture.instructor?.id,
       lecture.title,
       lecture.desc,
-      lecture.price,
+      lecture.price.money,
       lecture.category,
       lecture.status,
       lecture.numOfStudent,
@@ -22,7 +22,7 @@ export default class LectureRepository implements ILectureRepository {
       lecture.updatedAt,
     ]);
 
-    return result[0].insertId as string;
+    return result[0].insertId;
   }
 
   async findById(id: string): Promise<Lecture | null> {
