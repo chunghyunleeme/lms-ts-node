@@ -64,7 +64,6 @@ describe("lecture test", () => {
 
       const student: Student = {
         id: "1",
-        email: "test@gmail.com",
         nickName: "test",
       };
 
@@ -89,7 +88,6 @@ describe("lecture test", () => {
 
       const student: Student = {
         id: "1",
-        email: "test@gmail.com",
         nickName: "test",
       };
 

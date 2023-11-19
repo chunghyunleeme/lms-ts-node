@@ -7,7 +7,7 @@ import { Student } from "./student";
 export default class Lecture {
   private _id: string;
   private _instructor: Instructor | null;
-  private _students: Enrollment[] = [];
+  private _enrollments: Enrollment[] = [];
   private _category: Category;
   private _title: string;
   private _desc: string;
@@ -51,6 +51,7 @@ export default class Lecture {
     numberOfStudent,
     createdAt,
     updatedAt,
+    enrollments,
   }: {
     id: string;
     title: string;
@@ -61,6 +62,7 @@ export default class Lecture {
     numberOfStudent: number;
     createdAt: Date;
     updatedAt: Date;
+    enrollments?: Enrollment[];
   }): Lecture {
     const lecture = new Lecture({
       instructor: null,
@@ -69,12 +71,14 @@ export default class Lecture {
       price,
       category: category as Category,
     });
-
+    lecture._id = id;
     lecture._status = status as Status;
     lecture._numOfStudent = numberOfStudent;
     lecture._createdAt = createdAt;
     lecture._updatedAt = updatedAt;
-
+    if (enrollments) {
+      lecture._enrollments = enrollments;
+    }
     return lecture;
   }
 
@@ -106,8 +110,8 @@ export default class Lecture {
     return this._numOfStudent;
   }
 
-  get students(): Enrollment[] {
-    return this._students;
+  get enrollments(): Enrollment[] {
+    return this._enrollments;
   }
 
   get status(): Status {
@@ -125,14 +129,25 @@ export default class Lecture {
   }
 
   public enrollment(student: Student): Enrollment {
+    if (this.enrollments == undefined) {
+      throw new Error("잘못된 접근입니다.");
+    }
+
+    if (
+      this.enrollments.some((enrollment) => enrollment.student.id == student.id)
+    ) {
+      throw new Error("이미 수강 중인 강의는 신청할 수 없습니다.");
+    }
+
     if (this.status == Status.PRIVATE) {
       throw new Error("비공개된 강의는 수강 신청할 수 없습니다.");
     }
     const enrollment = new Enrollment({
       lecture: this,
       student,
+      enrollmentDate: new Date(),
     });
-    this._students.push(enrollment);
+    this._enrollments.push(enrollment);
 
     ++this._numOfStudent;
 

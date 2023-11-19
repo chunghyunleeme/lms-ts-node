@@ -9,6 +9,7 @@ import { InstructorService } from "../../../src/lecture/infra/adapter/instructor
 import Lecture from "../../../src/lecture/domain/lecture";
 import { Category } from "../../../src/lecture/domain/category";
 import { Status } from "../../../src/lecture/domain/status";
+import Enrollment from "../../../src/lecture/domain/enrollment";
 
 describe("lecture service test", () => {
   const studentService: IStudentService = mock(StudentService);
@@ -19,10 +20,46 @@ describe("lecture service test", () => {
     instance(instructorService),
     instance(studentService)
   );
+  describe("강의 등록 테스트", () => {
+    it("동일한 강의명 중복 불가하다.", () => {
+      // given
+      const title = "title";
+      when(instructorService.findById("1")).thenResolve({
+        id: "id",
+        name: "name",
+      });
+      when(lectureRepository.findByTitle(title)).thenResolve(
+        Lecture.from({
+          id: "1",
+          title,
+          desc: "desc",
+          price: 1000,
+          category: Category.ALGORITHM,
+          status: Status.PUBLIC,
+          numberOfStudent: 0,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        })
+      );
+
+      // when, then
+      expect(
+        async () =>
+          await lectureService.save({
+            instructorId: "1",
+            title,
+            desc: "desc",
+            price: 1000,
+            category: Category.ALGORITHM,
+          })
+      ).rejects.toThrow(new Error("이미 존재하는 강의명입니다."));
+    });
+  });
+
   describe("수강 신청 테스트", () => {
     it("실패: 가입하지 않은 수강생은 수강신청을 할 수 없다.", () => {
       // given
-      when(lectureRepository.findById("1")).thenResolve(
+      when(lectureRepository.findByIdWithEnrollments("1")).thenResolve(
         Lecture.from({
           id: "1",
           title: "title",
@@ -47,10 +84,11 @@ describe("lecture service test", () => {
     it("실패: 삭제된 강의는 수강신청을 할 수 없다.", () => {
       // given
       when(studentService.findById("1")).thenResolve({
-        _id: "1",
-        _name: "name",
+        id: "1",
+        name: "name",
+        email: "email@email.com",
       });
-      when(lectureRepository.findById("1")).thenResolve(null);
+      when(lectureRepository.findByIdWithEnrollments("1")).thenResolve(null);
 
       // when, then
       expect(
@@ -62,10 +100,10 @@ describe("lecture service test", () => {
     it("실패: 비공개 강의는 강의를 신청 할 수 없다.", () => {
       // given
       when(studentService.findById("1")).thenResolve({
-        _id: "1",
-        _name: "name",
+        id: "1",
+        name: "name",
       });
-      when(lectureRepository.findById("1")).thenResolve(
+      when(lectureRepository.findByIdWithEnrollments("1")).thenResolve(
         Lecture.from({
           id: "1",
           title: "title",
@@ -84,6 +122,54 @@ describe("lecture service test", () => {
         async () =>
           await lectureService.enroll({ lectureId: "1", studentId: "1" })
       ).rejects.toThrow(new Error("비공개된 강의는 수강 신청할 수 없습니다."));
+    });
+
+    it("실패: 이미 수강 중인 강의는 강의를 신청 할 수 없다.", () => {
+      // given
+      when(studentService.findById("1")).thenResolve({
+        id: "1",
+        nickName: "nickname",
+        email: "email@email.com",
+      });
+      when(lectureRepository.findByIdWithEnrollments("1")).thenResolve(
+        Lecture.from({
+          id: "1",
+          title: "title",
+          desc: "desc",
+          category: Category.ALGORITHM,
+          price: 1000,
+          status: Status.PUBLIC,
+          numberOfStudent: 0,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          enrollments: [
+            new Enrollment({
+              lecture: Lecture.from({
+                id: "1",
+                title: "title",
+                desc: "desc",
+                category: Category.ALGORITHM,
+                price: 1000,
+                status: Status.PUBLIC,
+                numberOfStudent: 0,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+              }),
+              student: {
+                id: "1",
+                nickName: "nickname",
+              },
+              enrollmentDate: new Date(),
+            }),
+          ],
+        })
+      );
+
+      // when, then
+      expect(
+        async () =>
+          await lectureService.enroll({ lectureId: "1", studentId: "1" })
+      ).rejects.toThrow(new Error("이미 수강 중인 강의는 신청할 수 없습니다."));
     });
   });
 });

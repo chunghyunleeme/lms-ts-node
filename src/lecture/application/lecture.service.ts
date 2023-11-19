@@ -57,7 +57,9 @@ export default class LectureService {
     lectureId: string;
     studentId: string;
   }) {
-    const lecture = await this.lectureRepository.findById(lectureId);
+    const lecture = await this.lectureRepository.findByIdWithEnrollments(
+      lectureId
+    );
     if (!lecture) {
       throw new Error("존재하지 않는 강의입니다.");
     }

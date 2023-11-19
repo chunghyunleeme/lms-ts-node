@@ -8,6 +8,8 @@ export default interface ILectureRepository {
 
   findById(id: string): Promise<Lecture | null>;
 
+  findByIdWithEnrollments(id: string): Promise<Lecture | null>;
+
   findByTitle(title: string): Promise<Lecture | null>;
 
   saveEnrollment(enrollment: Enrollment): Promise<void>;
