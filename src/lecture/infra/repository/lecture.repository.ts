@@ -3,14 +3,14 @@ import Enrollment from "../../domain/enrollment";
 import Lecture from "../../domain/lecture";
 import ILectureRepository from "../../domain/repository/ilecture.repository";
 import db from "../../../db";
-import { RowDataPacket } from "mysql2";
+import { FieldPacket, ResultSetHeader, RowDataPacket } from "mysql2";
 @registry([{ token: "LectureRepository", useValue: "LectureRepository" }])
 @injectable()
 export default class LectureRepository implements ILectureRepository {
   async save(lecture: Lecture): Promise<number> {
     const query =
       "INSERT INTO lecture (instructor_id, title, description, price, category, status, num_of_students, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    const result: any = await db.query(query, [
+    const [result]: [ResultSetHeader, FieldPacket[]] = await db.query(query, [
       lecture.instructor?.id,
       lecture.title,
       lecture.desc,
@@ -22,7 +22,7 @@ export default class LectureRepository implements ILectureRepository {
       lecture.updatedAt,
     ]);
 
-    return result[0].insertId;
+    return result.insertId;
   }
 
   async findById(id: number): Promise<Lecture | null> {
@@ -40,22 +40,30 @@ export default class LectureRepository implements ILectureRepository {
     return lecture;
   }
 
-  update(lecture: Lecture): Promise<void> {
-    throw new Error("Method not implemented.");
+  async update(lecture: Lecture): Promise<void> {
+    const query =
+      "UPDATE lecture SET title = ?, description = ?, price = ? WHERE id = ?";
+    await db.query(query, [
+      lecture.title,
+      lecture.desc,
+      lecture.price.money,
+      lecture.id,
+    ]);
   }
 
-  async saveEnrollment(enrollment: Enrollment): Promise<void> {
+  async saveEnrollment(enrollment: Enrollment): Promise<number> {
     const query =
-      "INSERT INTO enrollment (lecture_id, student_id, enrollment_date) VALUES (? ,?)";
-    await db.query(query, [
+      "INSERT INTO enrollment (lecture_id, student_id, enrollment_date) VALUES (? ,?, ?)";
+    const [result]: [ResultSetHeader, FieldPacket[]] = await db.query(query, [
       enrollment.lecture.id,
       enrollment.student.id,
       enrollment.enrollmentDate,
     ]);
-    return;
+    // console.log("result = ", result);
+    return result.insertId;
   }
 
-  async findByIdWithEnrollments(id: string): Promise<Lecture | null> {
+  async findByIdWithEnrollments(id: number): Promise<Lecture | null> {
     const result = await db.query(
       "SELECT * FROM lecture l LEFT JOIN enrollment e ON l.id = e.lecture_id WHERE l.id = ?",
       [id]

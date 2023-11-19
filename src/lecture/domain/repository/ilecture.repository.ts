@@ -8,11 +8,11 @@ export default interface ILectureRepository {
 
   findById(id: number): Promise<Lecture | null>;
 
-  findByIdWithEnrollments(id: string): Promise<Lecture | null>;
+  findByIdWithEnrollments(id: number): Promise<Lecture | null>;
 
   findByTitle(title: string): Promise<Lecture | null>;
 
   update(lecture: Lecture): Promise<void>;
 
-  saveEnrollment(enrollment: Enrollment): Promise<void>;
+  saveEnrollment(enrollment: Enrollment): Promise<number>;
 }

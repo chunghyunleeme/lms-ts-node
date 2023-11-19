@@ -76,7 +76,7 @@ describe("lecture service test", () => {
   describe("수강 신청 테스트", () => {
     it("실패: 가입하지 않은 수강생은 수강신청을 할 수 없다.", () => {
       // given
-      when(lectureRepository.findByIdWithEnrollments("1")).thenResolve(
+      when(lectureRepository.findByIdWithEnrollments(1)).thenResolve(
         Lecture.from({
           id: 1,
           title: "title",
@@ -93,8 +93,7 @@ describe("lecture service test", () => {
 
       // when, then
       expect(
-        async () =>
-          await lectureService.enroll({ lectureId: "1", studentId: 1 })
+        async () => await lectureService.enroll({ lectureId: 1, studentId: 1 })
       ).rejects.toThrow(new Error("존재하지 않는 학생입니다."));
     });
 
@@ -105,12 +104,11 @@ describe("lecture service test", () => {
         name: "name",
         email: "email@email.com",
       });
-      when(lectureRepository.findByIdWithEnrollments("1")).thenResolve(null);
+      when(lectureRepository.findByIdWithEnrollments(1)).thenResolve(null);
 
       // when, then
       expect(
-        async () =>
-          await lectureService.enroll({ lectureId: "1", studentId: 1 })
+        async () => await lectureService.enroll({ lectureId: 1, studentId: 1 })
       ).rejects.toThrow(new Error("존재하지 않는 강의입니다."));
     });
   });
