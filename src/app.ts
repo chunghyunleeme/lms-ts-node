@@ -1,6 +1,7 @@
 import express, { Application, Request, Response, NextFunction } from "express";
 import { createConnection } from "mysql2";
 import db from "./db";
+import StudentController from "./student/interface/student.controller";
 
 const app: Application = express();
 

@@ -1,15 +1,15 @@
-import { inject } from "tsyringe";
+import { inject, injectable } from "tsyringe";
 import IStudentRepository from "../domain/repository/istudent.repository";
 import Student from "../domain/student";
-import db from "../../db";
 
+@injectable()
 export class StudentService {
   constructor(
     @inject("StudentRepository")
     private readonly studentRepository: IStudentRepository
   ) {}
 
-  async join(email: string, nickName: string) {
+  async join(email: string, nickName: string): Promise<number> {
     await this.checkDuplicateEmail(email);
 
     return await this.studentRepository.save(
