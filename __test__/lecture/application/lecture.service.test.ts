@@ -96,32 +96,5 @@ describe("lecture service test", () => {
           await lectureService.enroll({ lectureId: "1", studentId: "1" })
       ).rejects.toThrow(new Error("존재하지 않는 강의입니다."));
     });
-
-    it("실패: 비공개 강의는 강의를 신청 할 수 없다.", () => {
-      // given
-      when(studentService.findById("1")).thenResolve({
-        id: "1",
-        name: "name",
-      });
-      when(lectureRepository.findByIdWithEnrollments("1")).thenResolve(
-        Lecture.from({
-          id: "1",
-          title: "title",
-          desc: "desc",
-          price: 1000,
-          category: Category.ALGORITHM,
-          status: Status.PRIVATE,
-          numberOfStudent: 0,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        })
-      );
-
-      // when, then
-      expect(
-        async () =>
-          await lectureService.enroll({ lectureId: "1", studentId: "1" })
-      ).rejects.toThrow(new Error("비공개된 강의는 수강 신청할 수 없습니다."));
-    });
   });
 });

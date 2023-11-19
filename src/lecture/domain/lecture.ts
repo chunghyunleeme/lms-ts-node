@@ -7,7 +7,7 @@ import { Student } from "./student";
 export default class Lecture {
   private _id: string;
   private _instructor: Instructor | null;
-  private _enrollments: Enrollment[] = [];
+  private _enrollments: Enrollment[] | undefined;
   private _category: Category;
   private _title: string;
   private _desc: string;
@@ -51,6 +51,7 @@ export default class Lecture {
     numberOfStudent,
     createdAt,
     updatedAt,
+    instructor,
     enrollments,
   }: {
     id: string;
@@ -62,6 +63,7 @@ export default class Lecture {
     numberOfStudent: number;
     createdAt: Date;
     updatedAt: Date;
+    instructor?: Instructor;
     enrollments?: Enrollment[];
   }): Lecture {
     const lecture = new Lecture({
@@ -76,6 +78,9 @@ export default class Lecture {
     lecture._numOfStudent = numberOfStudent;
     lecture._createdAt = createdAt;
     lecture._updatedAt = updatedAt;
+    if (instructor) {
+      lecture._instructor = instructor;
+    }
     if (enrollments) {
       lecture._enrollments = enrollments;
     }
@@ -110,8 +115,8 @@ export default class Lecture {
     return this._numOfStudent;
   }
 
-  get enrollments(): Enrollment[] {
-    return this._enrollments;
+  get enrollments(): Enrollment[] | undefined {
+    return this?._enrollments;
   }
 
   get status(): Status {
@@ -147,7 +152,7 @@ export default class Lecture {
       student,
       enrollmentDate: new Date(),
     });
-    this._enrollments.push(enrollment);
+    this._enrollments?.push(enrollment);
 
     ++this._numOfStudent;
 

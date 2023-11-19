@@ -118,6 +118,36 @@ describe("lecture test", () => {
       );
     });
 
+    it("실패: 이미 수강 중인 경우", () => {
+      // given
+      const instructor: Instructor = {
+        id: "1",
+        name: "테스트 교사",
+      };
+
+      const student: Student = {
+        id: "1",
+        nickName: "test",
+      };
+
+      const lecture: Lecture = Lecture.from({
+        id: "1",
+        title: "title",
+        desc: "desc",
+        category: Category.ALGORITHM,
+        price: 1000,
+        status: Status.PUBLIC,
+        numberOfStudent: 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      // when, then
+      expect(() => lecture.enrollment(student)).toThrow(
+        new Error("잘못된 접근입니다.")
+      );
+    });
+
     it("성공", () => {
       // given
       const instructor: Instructor = {
@@ -125,12 +155,17 @@ describe("lecture test", () => {
         name: "테스트 교사",
       };
 
-      const lecture = new Lecture({
-        instructor,
-        title: "테스트 강의",
-        desc: "테스트 설명",
+      const lecture: Lecture = Lecture.from({
+        id: "1",
+        title: "title",
+        desc: "desc",
+        category: Category.ALGORITHM,
         price: 1000,
-        category: Category.APP,
+        status: Status.PRIVATE,
+        numberOfStudent: 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        enrollments: [],
       });
       lecture.open();
 
