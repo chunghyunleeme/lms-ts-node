@@ -7,17 +7,6 @@ import { RowDataPacket } from "mysql2";
 @registry([{ token: "LectureRepository", useValue: "LectureRepository" }])
 @injectable()
 export default class LectureRepository implements ILectureRepository {
-  async saveEnrollment(enrollment: Enrollment): Promise<void> {
-    const query =
-      "INSERT INTO enrollment (lecture_id, student_id, enrollment_date) VALUES (? ,?)";
-    await db.query(query, [
-      enrollment.lecture.id,
-      enrollment.student.id,
-      enrollment.enrollmentDate,
-    ]);
-    return;
-  }
-
   async save(lecture: Lecture): Promise<string> {
     const query =
       "INSERT INTO lecture (instructor_id, title, description, price, category, status, num_of_students, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -49,6 +38,21 @@ export default class LectureRepository implements ILectureRepository {
     const lectureData: RowDataPacket[0] = result[0];
     const lecture: Lecture | null = this.mapToDomainEntity(lectureData);
     return lecture;
+  }
+
+  update(lecture: Lecture): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
+  async saveEnrollment(enrollment: Enrollment): Promise<void> {
+    const query =
+      "INSERT INTO enrollment (lecture_id, student_id, enrollment_date) VALUES (? ,?)";
+    await db.query(query, [
+      enrollment.lecture.id,
+      enrollment.student.id,
+      enrollment.enrollmentDate,
+    ]);
+    return;
   }
 
   async findByIdWithEnrollments(id: string): Promise<Lecture | null> {

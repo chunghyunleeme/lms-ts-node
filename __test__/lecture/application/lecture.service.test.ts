@@ -9,7 +9,6 @@ import { InstructorService } from "../../../src/lecture/infra/adapter/instructor
 import Lecture from "../../../src/lecture/domain/lecture";
 import { Category } from "../../../src/lecture/domain/category";
 import { Status } from "../../../src/lecture/domain/status";
-import Enrollment from "../../../src/lecture/domain/enrollment";
 
 describe("lecture service test", () => {
   const studentService: IStudentService = mock(StudentService);
@@ -53,6 +52,24 @@ describe("lecture service test", () => {
             category: Category.ALGORITHM,
           })
       ).rejects.toThrow(new Error("이미 존재하는 강의명입니다."));
+    });
+  });
+
+  describe("강의 수정 테스트", () => {
+    it("실패: 존재하지 않는 강의인 경우 수정할 수 없다.", () => {
+      // given
+      when(lectureRepository.findById("1")).thenResolve(null);
+
+      // when, then
+      expect(
+        async () =>
+          await lectureService.update({
+            lectureId: "1",
+            title: "title",
+            desc: "desc",
+            price: 1000,
+          })
+      ).rejects.toThrow(new Error("존재하지 않는 강의 입니다."));
     });
   });
 

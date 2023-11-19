@@ -26,7 +26,7 @@ export default class LectureService {
     desc: string;
     price: number;
     category: Category;
-  }) {
+  }): Promise<void> {
     const instructor: Instructor | null = await this.instructorService.findById(
       instructorId
     );
@@ -48,6 +48,31 @@ export default class LectureService {
         category,
       })
     );
+  }
+
+  async update({
+    lectureId,
+    title,
+    desc,
+    price,
+  }: {
+    lectureId: string;
+    title?: string;
+    desc?: string;
+    price?: number;
+  }): Promise<void> {
+    const lecture = await this.lectureRepository.findById(lectureId);
+    if (!lecture) {
+      throw new Error("존재하지 않는 강의 입니다.");
+    }
+
+    lecture.update({
+      title,
+      desc,
+      price,
+    });
+
+    await this.lectureRepository.update(lecture);
   }
 
   async enroll({

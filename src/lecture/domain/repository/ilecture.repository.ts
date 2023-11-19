@@ -12,5 +12,7 @@ export default interface ILectureRepository {
 
   findByTitle(title: string): Promise<Lecture | null>;
 
+  update(lecture: Lecture): Promise<void>;
+
   saveEnrollment(enrollment: Enrollment): Promise<void>;
 }
