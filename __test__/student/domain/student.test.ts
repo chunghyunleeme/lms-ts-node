@@ -21,6 +21,6 @@ describe("student test", () => {
     student.withdrawal();
 
     // then
-    expect(student.email).toBe(null);
+    expect(student.email).toContain("/del/");
   });
 });

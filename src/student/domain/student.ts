@@ -37,6 +37,6 @@ export default class Student {
   }
 
   public withdrawal(): void {
-    this._email = null;
+    this._email += `/del/${new Date().toISOString()}`;
   }
 }
