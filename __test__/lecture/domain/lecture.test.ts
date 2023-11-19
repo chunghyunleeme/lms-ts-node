@@ -71,7 +71,7 @@ describe("lecture test", () => {
       // when, then
       expect(() => lecture.enrollment(student)).toThrow(Error);
     });
-    it("성공: 강의 수강 테스트", () => {
+    it("성공", () => {
       // given
       const instructor: Instructor = {
         id: "1",
