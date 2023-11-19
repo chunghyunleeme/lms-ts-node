@@ -70,6 +70,54 @@ describe("lecture test", () => {
       // when, then
       expect(() => lecture.enrollment(student)).toThrow(Error);
     });
+
+    it("실패: 이미 수강 중인 경우", () => {
+      // given
+      const instructor: Instructor = {
+        id: "1",
+        name: "테스트 교사",
+      };
+
+      const student: Student = {
+        id: "1",
+        nickName: "test",
+      };
+
+      const lecture: Lecture = Lecture.from({
+        id: "1",
+        title: "title",
+        desc: "desc",
+        category: Category.ALGORITHM,
+        price: 1000,
+        status: Status.PUBLIC,
+        numberOfStudent: 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        enrollments: [
+          new Enrollment({
+            lecture: Lecture.from({
+              id: "1",
+              title: "title",
+              desc: "desc",
+              category: Category.ALGORITHM,
+              price: 1000,
+              status: Status.PUBLIC,
+              numberOfStudent: 0,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            }),
+            student: student,
+            enrollmentDate: new Date(),
+          }),
+        ],
+      });
+
+      // when, then
+      expect(() => lecture.enrollment(student)).toThrow(
+        new Error("이미 수강 중인 강의는 신청할 수 없습니다.")
+      );
+    });
+
     it("성공", () => {
       // given
       const instructor: Instructor = {

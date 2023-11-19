@@ -19,18 +19,4 @@ export default class Enrollment {
     this.lecture = lecture;
     this.student = student;
   }
-
-  // static from({
-  //   lecture,
-  //   student,
-  //   enrollmentDate,
-  // }: {
-  //   lecture: Lecture;
-  //   student: Student;
-  //   enrollmentDate: Date;
-  // }) {
-  //   const enrollment: Enrollment = new Enrollment({ lecture, student });
-  //   enrollment.enrollmentDate = enrollmentDate;
-  //   return enrollment;
-  // }
 }

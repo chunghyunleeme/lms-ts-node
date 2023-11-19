@@ -123,53 +123,5 @@ describe("lecture service test", () => {
           await lectureService.enroll({ lectureId: "1", studentId: "1" })
       ).rejects.toThrow(new Error("비공개된 강의는 수강 신청할 수 없습니다."));
     });
-
-    it("실패: 이미 수강 중인 강의는 강의를 신청 할 수 없다.", () => {
-      // given
-      when(studentService.findById("1")).thenResolve({
-        id: "1",
-        nickName: "nickname",
-        email: "email@email.com",
-      });
-      when(lectureRepository.findByIdWithEnrollments("1")).thenResolve(
-        Lecture.from({
-          id: "1",
-          title: "title",
-          desc: "desc",
-          category: Category.ALGORITHM,
-          price: 1000,
-          status: Status.PUBLIC,
-          numberOfStudent: 0,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          enrollments: [
-            new Enrollment({
-              lecture: Lecture.from({
-                id: "1",
-                title: "title",
-                desc: "desc",
-                category: Category.ALGORITHM,
-                price: 1000,
-                status: Status.PUBLIC,
-                numberOfStudent: 0,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-              }),
-              student: {
-                id: "1",
-                nickName: "nickname",
-              },
-              enrollmentDate: new Date(),
-            }),
-          ],
-        })
-      );
-
-      // when, then
-      expect(
-        async () =>
-          await lectureService.enroll({ lectureId: "1", studentId: "1" })
-      ).rejects.toThrow(new Error("이미 수강 중인 강의는 신청할 수 없습니다."));
-    });
   });
 });
