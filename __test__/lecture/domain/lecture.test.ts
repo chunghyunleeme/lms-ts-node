@@ -81,7 +81,7 @@ describe("lecture test", () => {
     it("실패: 이미 수강생이 있는 경우", () => {
       // given
       const student: Student = {
-        id: "1",
+        id: 1,
         nickName: "test",
       };
 
@@ -177,7 +177,7 @@ describe("lecture test", () => {
       });
 
       const student: Student = {
-        id: "1",
+        id: 1,
         nickName: "test",
       };
 
@@ -188,7 +188,7 @@ describe("lecture test", () => {
     it("실패: 이미 수강 중인 경우", () => {
       // given
       const student: Student = {
-        id: "1",
+        id: 1,
         nickName: "test",
       };
 
@@ -230,7 +230,7 @@ describe("lecture test", () => {
     it("실패: 수강 목록을 함께 조회하지 않은 경우", () => {
       // given
       const student: Student = {
-        id: "1",
+        id: 1,
         nickName: "test",
       };
 
@@ -274,7 +274,7 @@ describe("lecture test", () => {
       lecture.open();
 
       const student: Student = {
-        id: "1",
+        id: 1,
         nickName: "test",
       };
 

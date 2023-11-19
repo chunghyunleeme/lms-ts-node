@@ -2,19 +2,24 @@ import { injectable, registry } from "tsyringe";
 import IStudentRepository from "../../domain/repository/istudent.repository";
 import Student from "../../domain/student";
 import db from "../../../db";
-import { RowDataPacket } from "mysql2";
+import { FieldPacket, ResultSetHeader, RowDataPacket } from "mysql2";
 
 @registry([{ token: "InstructorRepository", useValue: "InstructorRepository" }])
 @injectable()
 export default class StudentRepository implements IStudentRepository {
-  async save(student: Student): Promise<void> {
-    const query = "INSERT INTO Student (nickName, email) VALUES (?, ?)";
-    await db.query(query, [student.nickName, student.email]);
-    return;
+  async save(student: Student): Promise<number> {
+    const query = "INSERT INTO student (nick_name, email) VALUES (?, ?)";
+    const [result]: [ResultSetHeader, FieldPacket[]] = await db.query(query, [
+      student.nickName,
+      student.email,
+    ]);
+
+    return result.insertId;
   }
 
-  async findById(id: string): Promise<Student | null> {
-    const result = await db.query("SELECT * FROM Student WHERE id = ?", [id]);
+  async findById(id: number): Promise<Student | null> {
+    const result = await db.query("SELECT * FROM student WHERE id = ?", [id]);
+
     const studentData: RowDataPacket[0] = result[0];
 
     const student: Student | null = this.mapToDomainEntity(studentData[0]);
@@ -23,7 +28,7 @@ export default class StudentRepository implements IStudentRepository {
   }
 
   async findByEmail(email: string): Promise<Student | null> {
-    const result = await db.query("SELECT * FROM Student WHERE email = ?", [
+    const result = await db.query("SELECT * FROM student WHERE email = ?", [
       email,
     ]);
     const studentData: RowDataPacket[0] = result[0];
@@ -37,7 +42,6 @@ export default class StudentRepository implements IStudentRepository {
       return null;
     }
 
-    data = data[0];
     return Student.from({
       id: data.id,
       email: data.email,

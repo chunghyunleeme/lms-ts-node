@@ -1,12 +1,14 @@
 import { inject } from "tsyringe";
 import IStudentRepository from "../domain/repository/istudent.repository";
 import Student from "../domain/student";
+import db from "../../db";
 
 export class StudentService {
   constructor(
     @inject("StudentRepository")
     private readonly studentRepository: IStudentRepository
   ) {}
+
   async join(email: string, nickName: string) {
     await this.checkDuplicateEmail(email);
 
@@ -18,7 +20,7 @@ export class StudentService {
     );
   }
 
-  public async findById(id: string) {
+  public async findById(id: number) {
     return await this.studentRepository.findById(id);
   }
 

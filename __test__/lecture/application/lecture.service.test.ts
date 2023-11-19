@@ -89,18 +89,18 @@ describe("lecture service test", () => {
           updatedAt: new Date(),
         })
       );
-      when(studentService.findById("1")).thenResolve(null);
+      when(studentService.findById(1)).thenResolve(null);
 
       // when, then
       expect(
         async () =>
-          await lectureService.enroll({ lectureId: "1", studentId: "1" })
+          await lectureService.enroll({ lectureId: "1", studentId: 1 })
       ).rejects.toThrow(new Error("존재하지 않는 학생입니다."));
     });
 
     it("실패: 삭제된 강의는 수강신청을 할 수 없다.", () => {
       // given
-      when(studentService.findById("1")).thenResolve({
+      when(studentService.findById(1)).thenResolve({
         id: "1",
         name: "name",
         email: "email@email.com",
@@ -110,7 +110,7 @@ describe("lecture service test", () => {
       // when, then
       expect(
         async () =>
-          await lectureService.enroll({ lectureId: "1", studentId: "1" })
+          await lectureService.enroll({ lectureId: "1", studentId: 1 })
       ).rejects.toThrow(new Error("존재하지 않는 강의입니다."));
     });
   });

@@ -1,5 +1,5 @@
 export default class Student {
-  private _id: string;
+  private _id: number;
   private _email: string | null;
   private _nickName: string;
   private _deletedAt: Date;
@@ -14,7 +14,7 @@ export default class Student {
     email,
     nickName,
   }: {
-    id: string;
+    id: number;
     email: string;
     nickName: string;
   }) {
@@ -23,7 +23,7 @@ export default class Student {
     return student;
   }
 
-  get id(): string {
+  get id(): number {
     return this._id;
   }
 

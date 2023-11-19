@@ -1,9 +1,9 @@
 import Student from "../student";
 
 export default interface IStudentRepository {
-  save: (student: Student) => Promise<void>;
+  save: (student: Student) => Promise<number>;
 
-  findById: (id: string) => Promise<Student | null>;
+  findById: (id: number) => Promise<Student | null>;
 
   findByEmail: (email: string) => Promise<Student | null>;
 }

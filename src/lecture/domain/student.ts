@@ -1,4 +1,4 @@
 export type Student = {
-  id: string;
+  id: number;
   nickName: string;
 };

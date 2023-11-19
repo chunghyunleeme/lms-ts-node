@@ -80,7 +80,7 @@ export default class LectureService {
     studentId,
   }: {
     lectureId: string;
-    studentId: string;
+    studentId: number;
   }) {
     const lecture = await this.lectureRepository.findByIdWithEnrollments(
       lectureId
