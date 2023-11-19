@@ -73,11 +73,6 @@ describe("lecture test", () => {
 
     it("실패: 이미 수강 중인 경우", () => {
       // given
-      const instructor: Instructor = {
-        id: "1",
-        name: "테스트 교사",
-      };
-
       const student: Student = {
         id: "1",
         nickName: "test",
@@ -118,13 +113,8 @@ describe("lecture test", () => {
       );
     });
 
-    it("실패: 이미 수강 중인 경우", () => {
+    it("실패: 수강 목록을 함께 조회하지 않은 경우", () => {
       // given
-      const instructor: Instructor = {
-        id: "1",
-        name: "테스트 교사",
-      };
-
       const student: Student = {
         id: "1",
         nickName: "test",
