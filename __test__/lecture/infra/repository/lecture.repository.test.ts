@@ -66,4 +66,31 @@ describe("lecture repository test", () => {
     // then
     expect(findLecture?.id).toBe(result);
   });
+
+  it("findByTitle test", async () => {
+    // given
+    const findInstructor = await instructorRepository.findById("1");
+    const instructor: Instructor = {
+      id: findInstructor.id,
+      name: findInstructor.name,
+    };
+
+    const lectureTitle = "title";
+    const lecture: Lecture = new Lecture({
+      instructor,
+      title: lectureTitle,
+      desc: "desc",
+      price: 1000,
+      category: Category.ALGORITHM,
+    });
+    await lectureRepository.save(lecture);
+
+    // when
+    const findLecture: Lecture | null = await lectureRepository.findByTitle(
+      lectureTitle
+    );
+
+    // then
+    expect(findLecture?.title).toBe(lectureTitle);
+  });
 });
