@@ -16,6 +16,7 @@ export default class Lecture {
   private _numOfStudent: number;
   private _createdAt: Date;
   private _updatedAt: Date;
+  private _deletedAt: Date | null;
 
   constructor({
     instructor,
@@ -39,6 +40,7 @@ export default class Lecture {
     this._status = Status.PRIVATE;
     this._createdAt = new Date();
     this._updatedAt = new Date();
+    this._deletedAt = null;
   }
 
   static from({
@@ -122,11 +124,17 @@ export default class Lecture {
   get status(): Status {
     return this._status;
   }
+
   get createdAt(): Date {
     return this._createdAt;
   }
+
   get updatedAt(): Date {
     return this._updatedAt;
+  }
+
+  get deletedAt(): Date | null {
+    return this._deletedAt;
   }
 
   public open(): void {
@@ -134,17 +142,19 @@ export default class Lecture {
   }
 
   public enrollment(student: Student): Enrollment {
-    if (this.enrollments == undefined) {
+    if (this._enrollments == undefined) {
       throw new Error("잘못된 접근입니다.");
     }
 
     if (
-      this.enrollments.some((enrollment) => enrollment.student.id == student.id)
+      this._enrollments.some(
+        (enrollment) => enrollment.student.id == student.id
+      )
     ) {
       throw new Error("이미 수강 중인 강의는 신청할 수 없습니다.");
     }
 
-    if (this.status == Status.PRIVATE) {
+    if (this._status == Status.PRIVATE) {
       throw new Error("비공개된 강의는 수강 신청할 수 없습니다.");
     }
     const enrollment = new Enrollment({
@@ -157,5 +167,17 @@ export default class Lecture {
     ++this._numOfStudent;
 
     return enrollment;
+  }
+
+  public delete(): void {
+    if (this._enrollments == undefined) {
+      throw new Error("잘못된 접근입니다.");
+    }
+
+    if (this._enrollments.length != 0) {
+      throw new Error("이미 수강생이 존재하는 강의는 삭제 할 수 없습니다.");
+    }
+
+    this._deletedAt = new Date();
   }
 }
