@@ -50,6 +50,31 @@ describe("lecture test", () => {
         })
       ).toThrow(Error);
     });
+
+    it("성공", () => {
+      // given
+      const instructor: Instructor = {
+        id: "1",
+        name: "테스트",
+      };
+      const lecture = new Lecture({
+        instructor,
+        title: "테스트 강의",
+        desc: "테스트 설명",
+        price: 1000,
+        category: Category.APP,
+      });
+
+      // when
+      lecture.update({
+        title: "update-title",
+        desc: "update-desc",
+        price: 2000,
+      });
+
+      // then
+      expect(lecture.price.money).toBe(2000);
+    });
   });
 
   describe("강의 삭제 테스트", () => {
