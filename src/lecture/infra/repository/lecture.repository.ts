@@ -65,7 +65,12 @@ export default class LectureRepository implements ILectureRepository {
 
   async findByIdWithEnrollments(id: number): Promise<Lecture | null> {
     const result = await db.query(
-      "SELECT * FROM lecture l LEFT JOIN enrollment e ON l.id = e.lecture_id WHERE l.id = ?",
+      "SELECT " +
+        "l.id, l.instructor_id, l.title, l.description, l.price, l.category, l.status, l.num_of_students, l.created_at, l.updated_at, " +
+        "e.id AS enrollment_id, e.student_id, e.lecture_id, e.enrollment_date " +
+        "FROM lecture l " +
+        "LEFT JOIN enrollment e ON l.id = e.lecture_id " +
+        "WHERE l.id = ?",
       [id]
     );
     const enrollmentsData: RowDataPacket[0] = result[0];
@@ -106,7 +111,8 @@ export default class LectureRepository implements ILectureRepository {
     const enrollments: Enrollment[] = [];
     for (let i = 0; i < data.length; ++i) {
       enrollments.push(
-        new Enrollment({
+        Enrollment.from({
+          id: data[i].enrollment_id,
           lecture: Lecture.from({
             id: data.id,
             title: data.title,

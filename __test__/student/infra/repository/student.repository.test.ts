@@ -4,6 +4,7 @@ import StudentRepository from "../../../../src/student/infra/repository/student.
 
 describe("student repository test", () => {
   beforeEach(async () => {
+    await db.query("DELETE FROM enrollment");
     await db.query("DELETE FROM student");
   });
 

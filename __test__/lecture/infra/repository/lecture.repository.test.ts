@@ -135,7 +135,6 @@ describe("lecture repository test", () => {
     );
 
     // then
-    console.log("updateLecture = ", updateLecture);
     expect(updateLecture?.title).toBe(updatedTitle);
     expect(updateLecture?.desc).toBe(lectureDesc);
   });
@@ -192,5 +191,64 @@ describe("lecture repository test", () => {
     );
 
     expect(result[0].id).toBe(enrollmentSaveId);
+  });
+
+  it("findByIdWithEnrollments test", async () => {
+    // given
+    const student = new Student({
+      email: "test@email.com",
+      nickName: "test",
+    });
+
+    const studentSaveId = await studentRepository.save(student);
+    const findStudent: Student | null = await studentRepository.findById(
+      studentSaveId
+    );
+
+    const findInstructor = await instructorRepository.findById("1");
+    const instructor: Instructor = {
+      id: findInstructor.id,
+      name: findInstructor.name,
+    };
+
+    const lecture: Lecture = new Lecture({
+      instructor,
+      title: "title",
+      desc: "desc",
+      price: 1000,
+      category: Category.ALGORITHM,
+    });
+    const lectureSaveId = await lectureRepository.save(lecture);
+
+    const findLecture: Lecture | null = await lectureRepository.findById(
+      lectureSaveId
+    );
+
+    let enrollmentSaveId: number;
+    if (findLecture && findStudent) {
+      const enrollment: Enrollment = new Enrollment({
+        lecture: findLecture,
+        student: {
+          id: findStudent?.id,
+          nickName: findStudent?.nickName,
+        },
+        enrollmentDate: new Date(),
+      });
+      enrollmentSaveId = await lectureRepository.saveEnrollment(enrollment);
+    }
+
+    // when
+    const lectureWithEnrollment: Lecture | null =
+      await lectureRepository.findByIdWithEnrollments(lectureSaveId);
+
+    // then
+    expect(lectureWithEnrollment?.enrollments).toHaveLength(1);
+    expect(
+      lectureWithEnrollment?.enrollments?.some((enrollment) => {
+        if (enrollment.id == enrollmentSaveId) {
+          return true;
+        }
+      })
+    ).toBeTruthy();
   });
 });
