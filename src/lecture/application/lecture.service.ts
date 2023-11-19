@@ -27,7 +27,7 @@ export default class LectureService {
     price: number;
     category: Category;
   }) {
-    const instructor: Instructor = await this.instructorService.findById(
+    const instructor: Instructor | null = await this.instructorService.findById(
       instructorId
     );
     if (!instructor) {
