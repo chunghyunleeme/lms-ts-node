@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { StudentService } from "../application/student.service";
 import CreateStudentDto from "./dto/create-student.dto";
+import { HttpError } from "../../http-error/http.error";
 
 export default class StudentController {
   constructor(private readonly studentService: StudentService) {}
@@ -12,9 +13,10 @@ export default class StudentController {
       return res.status(201).send({
         id: result,
       });
-    } catch (e) {
-      console.log("error", e);
-      return res.status(409).send();
+    } catch (e: any) {
+      return res.status(e.httpCode).send({
+        message: e.message,
+      });
     }
   }
 }

@@ -1,6 +1,7 @@
 import { inject, injectable } from "tsyringe";
 import IStudentRepository from "../domain/repository/istudent.repository";
 import Student from "../domain/student";
+import { AlreadyExistingEmail } from "../../error/already-existing-email.error";
 
 @injectable()
 export class StudentService {
@@ -27,7 +28,7 @@ export class StudentService {
   private async checkDuplicateEmail(email: string) {
     const student = await this.studentRepository.findByEmail(email);
     if (student) {
-      throw new Error("이미 존재하는 이메일입니다.");
+      throw new AlreadyExistingEmail();
     }
   }
 }
