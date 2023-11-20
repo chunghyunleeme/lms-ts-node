@@ -3,6 +3,7 @@ import { StudentService } from "../../../src/student/application/student.service
 import StudentController from "../../../src/student/interface/student.controller";
 import { Request, Response } from "express";
 import { AlreadyExistingEmail } from "../../../src/error/already-existing-email.error";
+import { CanNotFindStudent } from "../../../src/error/cannot-find-student.error";
 
 describe("student controller test", () => {
   const studentService: StudentService = mock(StudentService);

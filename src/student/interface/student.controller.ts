@@ -27,12 +27,10 @@ export default class StudentController {
 
   async withdrawal(req: Request, res: Response): Promise<Response> {
     try {
-      const { email, nickName }: CreateStudentDto = req.body;
-      const result = await this.studentService.join(email, nickName);
+      const id = req.params["id"];
+      await this.studentService.withdraw(parseInt(id));
 
-      return res.status(201).send({
-        id: result,
-      });
+      return res.status(200).send();
     } catch (e: any) {
       if (!(e instanceof HttpError)) {
         return res.status(500).send({
