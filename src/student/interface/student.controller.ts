@@ -7,14 +7,16 @@ export default class StudentController {
   async createStudent(req: Request, res: Response): Promise<Response> {
     try {
       const { email, nickName }: CreateStudentDto = req.body;
-      const result = await this.studentService.join(email, nickName);
+      const result: number = await this.studentService.join(email, nickName);
 
+      console.log("result = ", result);
       return res.status(201).send({
         id: result,
       });
-    } catch (e) {
-      console.log("error", e);
-      return res.status(401).send();
+    } catch (e: any) {
+      return res.status(409).send({
+        message: e.message,
+      });
     }
   }
 }
