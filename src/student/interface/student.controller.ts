@@ -14,6 +14,11 @@ export default class StudentController {
         id: result,
       });
     } catch (e: any) {
+      if (!(e instanceof HttpError)) {
+        return res.status(500).send({
+          message: e.message,
+        });
+      }
       return res.status(e.httpCode).send({
         message: e.message,
       });

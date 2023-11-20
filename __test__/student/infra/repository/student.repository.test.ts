@@ -28,6 +28,30 @@ describe("student repository test", () => {
     expect(typeof result).toBe("number");
   });
 
+  it("updateForWithdrawl test", async () => {
+    // given
+    const student = new Student({
+      email: "test@email.com",
+      nickName: "test",
+    });
+    const result = await studentRepository.save(student);
+
+    const findStudent: Student | null = await studentRepository.findById(
+      result
+    );
+    findStudent?.withdraw();
+
+    // when
+    if (findStudent) await studentRepository.updateForWithdrawl(findStudent);
+
+    // then
+    const findStudentWithdrawl: Student | null =
+      await studentRepository.findById(result);
+
+    expect(findStudentWithdrawl?.email).toContain("/");
+    expect(findStudentWithdrawl?.deletedAt).not.toBeNull();
+  });
+
   it("findById test", async () => {
     // given
     const student = new Student({

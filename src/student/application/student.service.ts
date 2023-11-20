@@ -2,6 +2,8 @@ import { inject, injectable } from "tsyringe";
 import IStudentRepository from "../domain/repository/istudent.repository";
 import Student from "../domain/student";
 import { AlreadyExistingEmail } from "../../error/already-existing-email.error";
+import { NotFoundError } from "../../http-error/not-found.error";
+import { CanNotFindStudent } from "../../error/cannot-find-student.error";
 
 @injectable()
 export class StudentService {
@@ -11,21 +13,32 @@ export class StudentService {
   ) {}
 
   async join(email: string, nickName: string): Promise<number> {
-    await this.checkDuplicateEmail(email);
+    await this.validateDuplicateEmail(email);
 
-    return await this.studentRepository.save(
+    const result = await this.studentRepository.save(
       new Student({
         email,
         nickName,
       })
     );
+    return result;
   }
 
-  public async findById(id: number) {
+  async withdraw(id: number): Promise<void> {
+    const student: Student | null = await this.findById(id);
+    if (!student) {
+      throw new CanNotFindStudent();
+    }
+
+    student.withdraw();
+    await this.studentRepository.updateForWithdrawl(student);
+  }
+
+  public async findById(id: number): Promise<Student | null> {
     return await this.studentRepository.findById(id);
   }
 
-  private async checkDuplicateEmail(email: string) {
+  private async validateDuplicateEmail(email: string) {
     const student = await this.studentRepository.findByEmail(email);
     if (student) {
       throw new AlreadyExistingEmail();

@@ -18,7 +18,7 @@ describe("student test", () => {
     });
 
     // when
-    student.withdrawal();
+    student.withdraw();
 
     // then
     expect(student.email).toContain("/");

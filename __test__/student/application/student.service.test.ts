@@ -3,14 +3,18 @@ import IStudentRepository from "../../../src/student/domain/repository/istudent.
 import { mock, when, instance } from "ts-mockito";
 import StudentRepository from "../../../src/student/infra/repository/student.repository";
 import Student from "../../../src/student/domain/student";
+import { AlreadyExistingEmail } from "../../../src/error/already-existing-email.error";
+import { NotFoundError } from "../../../src/http-error/not-found.error";
+import { CanNotFindStudent } from "../../../src/error/cannot-find-student.error";
 
 describe("student service test", () => {
+  const studentRepository: IStudentRepository = mock(StudentRepository);
+  const studentService: StudentService = new StudentService(
+    instance(studentRepository)
+  );
   describe("회원가입 테스트", () => {
-    it("이미 존재하는 이메일인 경우", async () => {
-      const studentRepository: IStudentRepository = mock(StudentRepository);
-      const studentService: StudentService = new StudentService(
-        instance(studentRepository)
-      );
+    it("실패: 이미 존재하는 이메일인 경우", async () => {
+      // given
       const email = "test@test.com";
       when(studentRepository.findByEmail(email)).thenResolve(
         new Student({
@@ -19,9 +23,23 @@ describe("student service test", () => {
         })
       );
 
+      // when, then
       expect(
         async () => await studentService.join(email, "test")
-      ).rejects.toThrow("이미 존재하는 이메일입니다.");
+      ).rejects.toThrow(new AlreadyExistingEmail());
+    });
+  });
+
+  describe("회원탈퇴 테스트", () => {
+    it("실패: 존재하지 않는 학생인 경우", () => {
+      // given
+      const studentId = 1;
+      when(studentRepository.findById(studentId)).thenResolve(null);
+
+      // when, then
+      expect(
+        async () => await studentService.withdraw(studentId)
+      ).rejects.toThrow(new CanNotFindStudent());
     });
   });
 });

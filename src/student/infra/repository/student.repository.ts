@@ -17,6 +17,13 @@ export default class StudentRepository implements IStudentRepository {
     return result.insertId;
   }
 
+  async updateForWithdrawl(student: Student) {
+    await db.query(
+      "UPDATE student SET email = ?, deleted_at = ? WHERE id = ?",
+      [student.email, new Date(), student.id]
+    );
+  }
+
   async findById(id: number): Promise<Student | null> {
     const result = await db.query("SELECT * FROM student WHERE id = ?", [id]);
 
@@ -46,6 +53,7 @@ export default class StudentRepository implements IStudentRepository {
       id: data.id,
       email: data.email,
       nickName: data.nickName,
+      deletedAt: data.deleted_at,
     });
   }
 }

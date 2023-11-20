@@ -13,13 +13,16 @@ export default class Student {
     id,
     email,
     nickName,
+    deletedAt,
   }: {
     id: number;
     email: string;
     nickName: string;
+    deletedAt: Date;
   }) {
     const student = new Student({ email, nickName });
     student._id = id;
+    student._deletedAt = deletedAt;
     return student;
   }
 
@@ -35,7 +38,11 @@ export default class Student {
     return this._nickName;
   }
 
-  public withdrawal(): void {
+  get deletedAt(): Date {
+    return this._deletedAt;
+  }
+
+  public withdraw(): void {
     const deleteDate = new Date();
     this._email += `/${deleteDate.toISOString()}`;
     this._deletedAt = deleteDate;
