@@ -1,19 +1,16 @@
 import { instance, mock, when } from "ts-mockito";
 import LectureService from "../../../src/lecture/application/lecture.service";
 import ILectureRepository from "../../../src/lecture/domain/repository/ilecture.repository";
-import LectureRepository from "../../../src/lecture/infra/repository/lecture.repository";
 import { IStudentService } from "../../../src/lecture/application/adapter/istudent.service";
-import StudentService from "../../../src/lecture/infra/adapter/student.service";
 import { IInstructorService } from "../../../src/lecture/application/adapter/iinstructor.service";
-import { InstructorService } from "../../../src/lecture/infra/adapter/instructor.service";
 import Lecture from "../../../src/lecture/domain/lecture";
 import { Category } from "../../../src/lecture/domain/category";
 import { Status } from "../../../src/lecture/domain/status";
 
 describe("lecture service test", () => {
-  const studentService: IStudentService = mock(StudentService);
-  const instructorService: IInstructorService = mock(InstructorService);
-  const lectureRepository: ILectureRepository = mock(LectureRepository);
+  const studentService: IStudentService = mock<IStudentService>();
+  const instructorService: IInstructorService = mock<IInstructorService>();
+  const lectureRepository: ILectureRepository = mock<ILectureRepository>();
   const lectureService: LectureService = new LectureService(
     instance(lectureRepository),
     instance(instructorService),

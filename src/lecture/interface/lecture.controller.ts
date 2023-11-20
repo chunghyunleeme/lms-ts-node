@@ -43,9 +43,23 @@ export default class LectureController {
     }
   }
 
-  updateLecture(req: Request, res: Response): Promise<Response> {}
-  openLecture(req: Request, res: Response): Promise<Response> {}
-  deleteLecture(req: Request, res: Response): Promise<Response> {}
+  //   async updateLecture(req: Request, res: Response): Promise<Response> {
+  //     try {
+  //       const id = req.params["id"];
+  //       const { title, desc, price } = req.body;
+  //     } catch (e: any) {
+  //       if (!(e instanceof HttpError)) {
+  //         return res.status(500).send({
+  //           message: e.message,
+  //         });
+  //       }
+  //       return res.status(e.httpCode).send({
+  //         message: e.message,
+  //       });
+  //     }
+  //   }
+  //   openLecture(req: Request, res: Response): Promise<Response> {}
+  //   deleteLecture(req: Request, res: Response): Promise<Response> {}
 
-  createEnrollment(req: Request, res: Response): Promise<Response> {}
+  //   createEnrollment(req: Request, res: Response): Promise<Response> {}
 }

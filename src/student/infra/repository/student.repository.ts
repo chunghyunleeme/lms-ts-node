@@ -17,11 +17,12 @@ export default class StudentRepository implements IStudentRepository {
     return result.insertId;
   }
 
-  async updateForWithdrawal(student: Student) {
+  async updateForWithdrawal(student: Student): Promise<void> {
     await db.query(
       "UPDATE student SET email = ?, deleted_at = ? WHERE id = ?",
       [student.email, new Date(), student.id]
     );
+    return;
   }
 
   async findById(id: number): Promise<Student | null> {
