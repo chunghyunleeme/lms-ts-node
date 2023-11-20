@@ -14,7 +14,7 @@ export default class StudentController {
       });
     } catch (e) {
       console.log("error", e);
-      return res.status(401).send();
+      return res.status(409).send();
     }
   }
 }
