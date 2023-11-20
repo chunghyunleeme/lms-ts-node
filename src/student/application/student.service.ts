@@ -31,7 +31,7 @@ export class StudentService {
     }
 
     student.withdraw();
-    await this.studentRepository.updateForWithdrawl(student);
+    await this.studentRepository.updateForWithdrawal(student);
   }
 
   public async findById(id: number): Promise<Student | null> {

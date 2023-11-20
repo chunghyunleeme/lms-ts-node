@@ -28,7 +28,7 @@ describe("student repository test", () => {
     expect(typeof result).toBe("number");
   });
 
-  it("updateForWithdrawl test", async () => {
+  it("updateForWithdrawal test", async () => {
     // given
     const student = new Student({
       email: "test@email.com",
@@ -42,14 +42,14 @@ describe("student repository test", () => {
     findStudent?.withdraw();
 
     // when
-    if (findStudent) await studentRepository.updateForWithdrawl(findStudent);
+    if (findStudent) await studentRepository.updateForWithdrawal(findStudent);
 
     // then
-    const findStudentWithdrawl: Student | null =
+    const findStudentWithdrawal: Student | null =
       await studentRepository.findById(result);
 
-    expect(findStudentWithdrawl?.email).toContain("/");
-    expect(findStudentWithdrawl?.deletedAt).not.toBeNull();
+    expect(findStudentWithdrawal?.email).toContain("/");
+    expect(findStudentWithdrawal?.deletedAt).not.toBeNull();
   });
 
   it("findById test", async () => {

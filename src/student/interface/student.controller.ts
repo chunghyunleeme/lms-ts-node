@@ -24,4 +24,24 @@ export default class StudentController {
       });
     }
   }
+
+  async withdrawal(req: Request, res: Response): Promise<Response> {
+    try {
+      const { email, nickName }: CreateStudentDto = req.body;
+      const result = await this.studentService.join(email, nickName);
+
+      return res.status(201).send({
+        id: result,
+      });
+    } catch (e: any) {
+      if (!(e instanceof HttpError)) {
+        return res.status(500).send({
+          message: e.message,
+        });
+      }
+      return res.status(e.httpCode).send({
+        message: e.message,
+      });
+    }
+  }
 }

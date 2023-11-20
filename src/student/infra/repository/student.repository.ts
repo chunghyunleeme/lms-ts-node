@@ -17,7 +17,7 @@ export default class StudentRepository implements IStudentRepository {
     return result.insertId;
   }
 
-  async updateForWithdrawl(student: Student) {
+  async updateForWithdrawal(student: Student) {
     await db.query(
       "UPDATE student SET email = ?, deleted_at = ? WHERE id = ?",
       [student.email, new Date(), student.id]
