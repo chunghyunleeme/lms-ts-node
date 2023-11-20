@@ -1,3 +1,4 @@
+import { injectable } from "tsyringe";
 import { Category } from "../domain/category";
 import Enrollment from "../domain/enrollment";
 import { Instructor } from "../domain/instructor";
@@ -7,6 +8,7 @@ import { Status } from "../domain/status";
 import { IInstructorService } from "./adapter/iinstructor.service";
 import { IStudentService } from "./adapter/istudent.service";
 
+@injectable()
 export default class LectureService {
   constructor(
     private readonly lectureRepository: ILectureRepository,
