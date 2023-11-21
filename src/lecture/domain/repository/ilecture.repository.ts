@@ -6,6 +6,8 @@ import { Status } from "../status";
 export default interface ILectureRepository {
   save(lecture: Lecture): Promise<number>;
 
+  saveEnrollment(enrollment: Enrollment): Promise<number>;
+
   findById(id: number): Promise<Lecture | null>;
 
   findByIdWithEnrollments(id: number): Promise<Lecture | null>;
@@ -14,5 +16,7 @@ export default interface ILectureRepository {
 
   update(lecture: Lecture): Promise<void>;
 
-  saveEnrollment(enrollment: Enrollment): Promise<number>;
+  updateForOpen(lecture: Lecture): Promise<void>;
+
+  softDelete(lecture: Lecture): Promise<void>;
 }

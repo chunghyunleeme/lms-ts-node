@@ -1,3 +1,4 @@
+import { BadRequestError } from "../../http-error/bad-request.error";
 import { Category } from "./category";
 import Enrollment from "./enrollment";
 import { Instructor } from "./instructor";
@@ -168,14 +169,12 @@ export default class Lecture {
 
   public delete(): void {
     if (this._enrollments == undefined) {
-      throw new Error("잘못된 접근입니다.");
+      throw new BadRequestError("잘못된 접근입니다.");
     }
 
     if (this._enrollments.length != 0) {
       throw new Error("이미 수강생이 존재하는 강의는 삭제 할 수 없습니다.");
     }
-
-    this._deletedAt = new Date();
   }
 
   public enrollment(student: Student): Enrollment {

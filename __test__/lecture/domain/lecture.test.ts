@@ -138,8 +138,8 @@ describe("lecture test", () => {
       // when
       lecture.delete();
 
-      // when, then
-      expect(lecture.deletedAt).not.toBeNull();
+      // then
+      // 에러 없음
     });
   });
   it("강의 공개 테스트", () => {

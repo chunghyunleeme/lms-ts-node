@@ -1,12 +1,14 @@
 import { injectable } from "tsyringe";
 import { Category } from "../domain/category";
-import Enrollment from "../domain/enrollment";
 import { Instructor } from "../domain/instructor";
 import Lecture from "../domain/lecture";
 import ILectureRepository from "../domain/repository/ilecture.repository";
 import { Status } from "../domain/status";
 import { IInstructorService } from "./adapter/iinstructor.service";
 import { IStudentService } from "./adapter/istudent.service";
+import { BadRequestError } from "../../http-error/bad-request.error";
+import { CanNotFindLecture } from "../../error/cannot-find-lecture.error";
+import { CanNotFindStudent } from "../../error/cannot-find-student.error";
 
 @injectable()
 export default class LectureService {
@@ -65,7 +67,7 @@ export default class LectureService {
   }): Promise<void> {
     const lecture = await this.lectureRepository.findById(lectureId);
     if (!lecture) {
-      throw new Error("존재하지 않는 강의 입니다.");
+      throw new CanNotFindLecture();
     }
 
     lecture.update({
@@ -77,27 +79,53 @@ export default class LectureService {
     await this.lectureRepository.update(lecture);
   }
 
+  async open(id: number): Promise<void> {
+    const lecture = await this.lectureRepository.findById(id);
+    if (!lecture) {
+      throw new CanNotFindLecture();
+    }
+    if (lecture.status == Status.PUBLIC) {
+      throw new BadRequestError("이미 공개된 강의 입니다.");
+    }
+
+    lecture.open();
+
+    await this.lectureRepository.updateForOpen(lecture);
+  }
+
   async enroll({
     lectureId,
     studentId,
   }: {
     lectureId: number;
     studentId: number;
-  }) {
+  }): Promise<number> {
     const lecture = await this.lectureRepository.findByIdWithEnrollments(
       lectureId
     );
     if (!lecture) {
-      throw new Error("존재하지 않는 강의입니다.");
+      throw new CanNotFindLecture();
     }
 
     const student = await this.studentService.findById(studentId);
     if (!student) {
-      throw new Error("존재하지 않는 학생입니다.");
+      throw new CanNotFindStudent();
     }
 
     return await this.lectureRepository.saveEnrollment(
       lecture.enrollment(student)
     );
+  }
+
+  async delete(id: number): Promise<void> {
+    const lecture: Lecture | null =
+      await this.lectureRepository.findByIdWithEnrollments(id);
+    if (!lecture) {
+      throw new CanNotFindLecture();
+    }
+
+    lecture.delete();
+
+    await this.lectureRepository.softDelete(lecture);
   }
 }

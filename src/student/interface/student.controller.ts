@@ -6,13 +6,10 @@ import { HttpError } from "../../http-error/http.error";
 export default class StudentController {
   constructor(private readonly studentService: StudentService) {}
   async createStudent(req: Request, res: Response): Promise<Response> {
+    let result;
     try {
       const { email, nickName }: CreateStudentDto = req.body;
-      const result = await this.studentService.join(email, nickName);
-
-      return res.status(201).send({
-        id: result,
-      });
+      result = await this.studentService.join(email, nickName);
     } catch (e: any) {
       if (!(e instanceof HttpError)) {
         return res.status(500).send({
@@ -23,14 +20,15 @@ export default class StudentController {
         message: e.message,
       });
     }
+    return res.status(201).send({
+      id: result,
+    });
   }
 
   async withdrawal(req: Request, res: Response): Promise<Response> {
     try {
       const id = req.params["id"];
       await this.studentService.withdraw(parseInt(id));
-
-      return res.status(200).send();
     } catch (e: any) {
       if (!(e instanceof HttpError)) {
         return res.status(500).send({
@@ -41,5 +39,6 @@ export default class StudentController {
         message: e.message,
       });
     }
+    return res.status(200).send();
   }
 }

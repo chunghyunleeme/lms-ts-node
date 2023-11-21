@@ -4,6 +4,8 @@ import Lecture from "../../domain/lecture";
 import ILectureRepository from "../../domain/repository/ilecture.repository";
 import db from "../../../db";
 import { FieldPacket, ResultSetHeader, RowDataPacket } from "mysql2";
+import { Status } from "../../domain/status";
+import { BadRequestError } from "../../../http-error/bad-request.error";
 @registry([{ token: "LectureRepository", useValue: "LectureRepository" }])
 @injectable()
 export default class LectureRepository implements ILectureRepository {
@@ -25,6 +27,18 @@ export default class LectureRepository implements ILectureRepository {
     return result.insertId;
   }
 
+  async saveEnrollment(enrollment: Enrollment): Promise<number> {
+    const query =
+      "INSERT INTO enrollment (lecture_id, student_id, enrollment_date) VALUES (? ,?, ?)";
+    const [result]: [ResultSetHeader, FieldPacket[]] = await db.query(query, [
+      enrollment.lecture.id,
+      enrollment.student.id,
+      enrollment.enrollmentDate,
+    ]);
+    // console.log("result = ", result);
+    return result.insertId;
+  }
+
   async findById(id: number): Promise<Lecture | null> {
     const result = await db.query("SELECT * FROM lecture WHERE id = ?", [id]);
     const lectureData: RowDataPacket[0] = result[0];
@@ -38,29 +52,6 @@ export default class LectureRepository implements ILectureRepository {
     const lectureData: RowDataPacket[0] = result[0];
     const lecture: Lecture | null = this.mapToDomainEntity(lectureData);
     return lecture;
-  }
-
-  async update(lecture: Lecture): Promise<void> {
-    const query =
-      "UPDATE lecture SET title = ?, description = ?, price = ? WHERE id = ?";
-    await db.query(query, [
-      lecture.title,
-      lecture.desc,
-      lecture.price.money,
-      lecture.id,
-    ]);
-  }
-
-  async saveEnrollment(enrollment: Enrollment): Promise<number> {
-    const query =
-      "INSERT INTO enrollment (lecture_id, student_id, enrollment_date) VALUES (? ,?, ?)";
-    const [result]: [ResultSetHeader, FieldPacket[]] = await db.query(query, [
-      enrollment.lecture.id,
-      enrollment.student.id,
-      enrollment.enrollmentDate,
-    ]);
-    // console.log("result = ", result);
-    return result.insertId;
   }
 
   async findByIdWithEnrollments(id: number): Promise<Lecture | null> {
@@ -82,6 +73,32 @@ export default class LectureRepository implements ILectureRepository {
       enrollments
     );
     return lecture;
+  }
+
+  async update(lecture: Lecture): Promise<void> {
+    const query =
+      "UPDATE lecture SET title = ?, description = ?, price = ? WHERE id = ?";
+    await db.query(query, [
+      lecture.title,
+      lecture.desc,
+      lecture.price.money,
+      lecture.id,
+    ]);
+  }
+
+  async updateForOpen(lecture: Lecture): Promise<void> {
+    if (lecture.status != Status.PUBLIC) {
+      throw new BadRequestError();
+    }
+    const query = "UPDATE lecture SET status = ?";
+    await db.query(query, [lecture.status]);
+  }
+
+  async softDelete(lecture: Lecture): Promise<void> {
+    await db.query("UPDATE lecture SET deleted_at = ? WHERE id = ?", [
+      new Date(),
+      lecture.id,
+    ]);
   }
 
   private mapToDomainEntity(data: RowDataPacket, enrollments?: Enrollment[]) {
