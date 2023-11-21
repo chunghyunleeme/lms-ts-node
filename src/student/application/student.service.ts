@@ -2,7 +2,6 @@ import { inject, injectable } from "tsyringe";
 import IStudentRepository from "../domain/repository/istudent.repository";
 import Student from "../domain/student";
 import { AlreadyExistingEmail } from "../../error/already-existing-email.error";
-import { NotFoundError } from "../../http-error/not-found.error";
 import { CanNotFindStudent } from "../../error/cannot-find-student.error";
 
 @injectable()

@@ -4,8 +4,6 @@ import Student from "../../domain/student";
 import db from "../../../db";
 import { FieldPacket, ResultSetHeader, RowDataPacket } from "mysql2";
 
-@registry([{ token: "InstructorRepository", useValue: "InstructorRepository" }])
-@injectable()
 export default class StudentRepository implements IStudentRepository {
   async save(student: Student): Promise<number> {
     const query = "INSERT INTO student (nick_name, email) VALUES (?, ?)";
