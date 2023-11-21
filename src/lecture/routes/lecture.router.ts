@@ -18,7 +18,7 @@ lectureRouter.post("/:id/enrollments", (req, res) => {
   lectureController.createEnrollment(req, res);
 });
 
-lectureRouter.patch("/open/:id", (req, res) => {
+lectureRouter.patch("/:id/open", (req, res) => {
   lectureController.openLecture(req, res);
 });
 

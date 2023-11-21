@@ -90,8 +90,8 @@ export default class LectureRepository implements ILectureRepository {
     if (lecture.status != Status.PUBLIC) {
       throw new BadRequestError();
     }
-    const query = "UPDATE lecture SET status = ?";
-    await db.query(query, [lecture.status]);
+    const query = "UPDATE lecture SET status = ? WHERE id = ?";
+    await db.query(query, [lecture.status, lecture.id]);
   }
 
   async softDelete(lecture: Lecture): Promise<void> {
