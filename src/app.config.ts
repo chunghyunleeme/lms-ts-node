@@ -9,4 +9,3 @@ export default class AppConfig {
     return container;
   }
 }
-// export default function configDI(): DependencyContainer {}
