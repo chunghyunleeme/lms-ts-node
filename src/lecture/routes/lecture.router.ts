@@ -14,7 +14,7 @@ lectureRouter.post("/", (req, res) => {
   lectureController.createLecture(req, res);
 });
 
-lectureRouter.post("/enrollments", (req, res) => {
+lectureRouter.post("/:id/enrollments", (req, res) => {
   lectureController.createEnrollment(req, res);
 });
 
