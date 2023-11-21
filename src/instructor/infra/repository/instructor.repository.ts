@@ -4,8 +4,6 @@ import Instructor from "../../domain/instructor";
 import { RowDataPacket } from "mysql2";
 import IInstructorRepository from "../../domain/repository/Iinstructor.repository";
 
-@registry([{ token: "InstructorRepository", useValue: "InstructorRepository" }])
-@injectable()
 export default class InstructorRepository implements IInstructorRepository {
   async save(name: string): Promise<void> {
     await db.query("INSERT INTO Instructor (name) VALUES (?)", [name]);

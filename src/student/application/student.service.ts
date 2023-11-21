@@ -1,10 +1,10 @@
-import { inject, injectable } from "tsyringe";
+import { inject, injectable, singleton } from "tsyringe";
 import IStudentRepository from "../domain/repository/istudent.repository";
 import Student from "../domain/student";
 import { AlreadyExistingEmail } from "../../error/already-existing-email.error";
 import { CanNotFindStudent } from "../../error/cannot-find-student.error";
 
-@injectable()
+@singleton()
 export class StudentService {
   constructor(
     @inject("StudentRepository")

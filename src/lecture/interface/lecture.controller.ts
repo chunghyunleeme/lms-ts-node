@@ -2,8 +2,8 @@ import { Request, Response, response } from "express";
 import LectureService from "../application/lecture.service";
 import { Category } from "../domain/category";
 import { HttpError } from "../../http-error/http.error";
-import { injectable } from "tsyringe";
-@injectable()
+import { injectable, singleton } from "tsyringe";
+@singleton()
 export default class LectureController {
   constructor(private readonly lectureService: LectureService) {}
 

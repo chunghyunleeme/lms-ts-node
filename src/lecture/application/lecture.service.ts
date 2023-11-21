@@ -1,4 +1,4 @@
-import { injectable } from "tsyringe";
+import { inject, injectable, singleton } from "tsyringe";
 import { Category } from "../domain/category";
 import { Instructor } from "../domain/instructor";
 import Lecture from "../domain/lecture";
@@ -10,11 +10,14 @@ import { BadRequestError } from "../../http-error/bad-request.error";
 import { CanNotFindLecture } from "../../error/cannot-find-lecture.error";
 import { CanNotFindStudent } from "../../error/cannot-find-student.error";
 
-@injectable()
+@singleton()
 export default class LectureService {
   constructor(
+    @inject("LectureRepository")
     private readonly lectureRepository: ILectureRepository,
+    @inject("InstructorService")
     private readonly instructorService: IInstructorService,
+    @inject("StudentService")
     private readonly studentService: IStudentService
   ) {}
 
