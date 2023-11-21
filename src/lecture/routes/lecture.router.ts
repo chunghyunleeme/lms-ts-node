@@ -1,10 +1,11 @@
 import { Router } from "express";
 import LectureController from "../interface/lecture.controller";
 import configDI from "../../app.config";
+import AppConfig from "../../app.config";
 
 const lectureRouter = Router();
 
-const container = configDI();
+const container = AppConfig.container();
 
 const lectureController: LectureController =
   container.resolve(LectureController);
