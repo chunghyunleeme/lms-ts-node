@@ -1,4 +1,4 @@
-import { Request, Response, response } from "express";
+import { NextFunction, Request, Response, response } from "express";
 import LectureService from "../application/lecture.service";
 import { Category } from "../domain/category";
 import { HttpError } from "../../http-error/http.error";
@@ -7,7 +7,7 @@ import { injectable, singleton } from "tsyringe";
 export default class LectureController {
   constructor(private readonly lectureService: LectureService) {}
 
-  async createLecture(req: Request, response: Response): Promise<Response> {
+  async createLecture(req: Request, response: Response, next: NextFunction) {
     try {
       const {
         instructorId,
@@ -30,21 +30,17 @@ export default class LectureController {
         price,
         category,
       });
+      return response.status(201).send();
     } catch (e: any) {
-      console.log("e", e);
-      if (!(e instanceof HttpError)) {
-        return response.status(500).send({
-          message: e.message,
-        });
-      }
-      return response.status(e.httpCode).send({
-        message: e.message,
-      });
+      next(e);
     }
-    return response.status(201).send();
   }
 
-  async updateLecture(req: Request, res: Response): Promise<Response> {
+  async updateLecture(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response> {
     try {
       const id = req.params["id"];
       const { title, desc, price } = req.body;
@@ -55,70 +51,41 @@ export default class LectureController {
         price,
       });
     } catch (e: any) {
-      if (!(e instanceof HttpError)) {
-        return res.status(500).send({
-          message: e.message,
-        });
-      }
-      return res.status(e.httpCode).send({
-        message: e.message,
-      });
+      next(e);
     }
     return res.status(200).send();
   }
 
-  async openLecture(req: Request, res: Response): Promise<Response> {
+  async openLecture(req: Request, res: Response, next: NextFunction) {
     try {
       const id: number = parseInt(req.params["id"]);
       await this.lectureService.open(id);
+      return res.status(200).send();
     } catch (e: any) {
-      if (!(e instanceof HttpError)) {
-        return res.status(500).send({
-          message: e.message,
-        });
-      }
-      return res.status(e.httpCode).send({
-        message: e.message,
-      });
+      next(e);
     }
-    return res.status(200).send();
   }
 
-  async createEnrollment(req: Request, res: Response): Promise<Response> {
-    let result: number;
+  async createEnrollment(req: Request, res: Response, next: NextFunction) {
     try {
       const lectureId: number = parseInt(req.params["id"]);
       const { studentId }: { studentId: number } = req.body;
-      result = await this.lectureService.enroll({ lectureId, studentId });
-    } catch (e: any) {
-      if (!(e instanceof HttpError)) {
-        return res.status(500).send({
-          message: e.message,
-        });
-      }
-      return res.status(e.httpCode).send({
-        message: e.message,
+      const result = await this.lectureService.enroll({ lectureId, studentId });
+      return response.status(201).send({
+        id: result,
       });
+    } catch (e: any) {
+      next(e);
     }
-    return response.status(201).send({
-      id: result,
-    });
   }
 
-  async deleteLecture(req: Request, res: Response): Promise<Response> {
+  async deleteLecture(req: Request, res: Response, next: NextFunction) {
     try {
       const id: number = parseInt(req.params["id"]);
       await this.lectureService.delete(id);
+      return res.status(200).send();
     } catch (e: any) {
-      if (!(e instanceof HttpError)) {
-        return res.status(500).send({
-          message: e.message,
-        });
-      }
-      return res.status(e.httpCode).send({
-        message: e.message,
-      });
+      next(e);
     }
-    return res.status(200).send();
   }
 }

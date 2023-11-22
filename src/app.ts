@@ -2,9 +2,10 @@ import "reflect-metadata";
 import express, { Application } from "express";
 import studentRouter from "./student/routes/student.router";
 import lectureRouter from "./lecture/routes/lecture.router";
-
+import ErrorHandlerMiddleware from "./middleware/error.handler.middleware";
 const app: Application = express();
 app.use(express.json());
 app.use("/students", studentRouter);
 app.use("/lectures", lectureRouter);
+app.use(ErrorHandlerMiddleware);
 export default app;

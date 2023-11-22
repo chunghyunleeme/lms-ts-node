@@ -1,4 +1,4 @@
-import { inject, injectable, singleton } from "tsyringe";
+import { inject, singleton } from "tsyringe";
 import IStudentRepository from "../domain/repository/istudent.repository";
 import Student from "../domain/student";
 import { AlreadyExistingEmail } from "../../error/already-existing-email.error";
