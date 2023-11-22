@@ -1,8 +1,8 @@
-import { inject, injectable } from "tsyringe";
+import { inject, injectable, singleton } from "tsyringe";
 import Instructor from "../domain/instructor";
 import IInstructorRepository from "../domain/repository/Iinstructor.repository";
 
-@injectable()
+@singleton()
 export class InstructorService {
   constructor(
     @inject("InstructorRepository")

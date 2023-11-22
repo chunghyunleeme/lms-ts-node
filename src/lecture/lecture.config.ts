@@ -1,15 +1,13 @@
-import { DependencyContainer, container } from "tsyringe";
+import "reflect-metadata";
+import { container } from "tsyringe";
 import LectureRepository from "./infra/repository/lecture.repository";
-import InstructorRepository from "../instructor/infra/repository/instructor.repository";
-import { InstructorService } from "../instructor/application/instructor.service";
-import { StudentService } from "../student/application/student.service";
+import LectureController from "./interface/lecture.controller";
+import StudentService from "./infra/adapter/student.service";
+import { InstructorService } from "./infra/adapter/instructor.service";
 
-export default function lectureConfig(container: DependencyContainer) {
+export default function lectureConfig() {
   container.register("LectureRepository", {
     useClass: LectureRepository,
-  });
-  container.register("InstructorRepository", {
-    useClass: InstructorRepository,
   });
   container.register("InstructorService", {
     useClass: InstructorService,
@@ -17,6 +15,8 @@ export default function lectureConfig(container: DependencyContainer) {
   container.register("StudentService", {
     useClass: StudentService,
   });
+
+  container.resolve(LectureController);
 
   return container;
 }

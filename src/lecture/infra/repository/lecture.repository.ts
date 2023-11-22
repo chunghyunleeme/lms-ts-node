@@ -9,6 +9,7 @@ import { BadRequestError } from "../../../http-error/bad-request.error";
 @registry([{ token: "LectureRepository", useValue: "LectureRepository" }])
 @injectable()
 export default class LectureRepository implements ILectureRepository {
+  constructor() {}
   async save(lecture: Lecture): Promise<number> {
     const query =
       "INSERT INTO lecture (instructor_id, title, description, price, category, status, num_of_students, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -35,7 +36,7 @@ export default class LectureRepository implements ILectureRepository {
       enrollment.student.id,
       enrollment.enrollmentDate,
     ]);
-    // console.log("result = ", result);
+
     return result.insertId;
   }
 

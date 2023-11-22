@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { StudentService } from "../application/student.service";
 import CreateStudentDto from "./dto/create-student.dto";
-import { HttpError } from "../../http-error/http.error";
-import { singleton } from "tsyringe";
+import { autoInjectable, singleton } from "tsyringe";
 @singleton()
 export default class StudentController {
   constructor(private readonly studentService: StudentService) {}

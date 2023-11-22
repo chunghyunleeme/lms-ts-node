@@ -5,6 +5,7 @@ import db from "../../../db";
 import { FieldPacket, ResultSetHeader, RowDataPacket } from "mysql2";
 
 export default class StudentRepository implements IStudentRepository {
+  constructor() {}
   async save(student: Student): Promise<number> {
     const query = "INSERT INTO student (nick_name, email) VALUES (?, ?)";
     const [result]: [ResultSetHeader, FieldPacket[]] = await db.query(query, [
