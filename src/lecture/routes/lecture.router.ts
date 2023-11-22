@@ -5,17 +5,16 @@ import { container } from "tsyringe";
 
 const lectureRouter = Router();
 
-// const container = AppConfig.container();
-
-// const lectureController: LectureController =
-//   container.resolve(LectureController);
-
 lectureRouter.post("/", (req, res, next) => {
   container.resolve(LectureController).createLecture(req, res, next);
 });
 
-lectureRouter.post("/:id/enrollments", (req, res, next) => {
-  container.resolve(LectureController).createEnrollment(req, res, next);
+// lectureRouter.post("/:id/enrollments", (req, res, next) => {
+//   container.resolve(LectureController).createEnrollment(req, res, next);
+// });
+
+lectureRouter.post("/enrollments", (req, res, next) => {
+  container.resolve(LectureController).createEnrollments(req, res, next);
 });
 
 lectureRouter.patch("/:id/open", (req, res, next) => {

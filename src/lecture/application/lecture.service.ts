@@ -9,6 +9,7 @@ import { IStudentService } from "./adapter/istudent.service";
 import { BadRequestError } from "../../http-error/bad-request.error";
 import { CanNotFindLecture } from "../../error/cannot-find-lecture.error";
 import { CanNotFindStudent } from "../../error/cannot-find-student.error";
+import db from "../../db";
 
 @singleton()
 export default class LectureService {
@@ -96,7 +97,29 @@ export default class LectureService {
     await this.lectureRepository.updateForOpen(lecture);
   }
 
-  async enroll({
+  async enrollLectures({
+    lectureIds,
+    studentId,
+  }: {
+    lectureIds: number[];
+    studentId: number;
+  }) {
+    const conn = await this.lectureRepository.getConnection();
+    try {
+      await conn.beginTransaction();
+      await Promise.all(
+        lectureIds.map((lectureId) => this.enroll({ lectureId, studentId }))
+      );
+      await conn.commit();
+    } catch (e) {
+      conn.rollback();
+      throw e;
+    } finally {
+      conn.release();
+    }
+  }
+
+  private async enroll({
     lectureId,
     studentId,
   }: {

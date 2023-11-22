@@ -1,13 +1,12 @@
-import { NextFunction, Request, Response, response } from "express";
+import { NextFunction, Request, Response } from "express";
 import LectureService from "../application/lecture.service";
 import { Category } from "../domain/category";
-import { HttpError } from "../../http-error/http.error";
-import { injectable, singleton } from "tsyringe";
+import { singleton } from "tsyringe";
 @singleton()
 export default class LectureController {
   constructor(private readonly lectureService: LectureService) {}
 
-  async createLecture(req: Request, response: Response, next: NextFunction) {
+  async createLecture(req: Request, res: Response, next: NextFunction) {
     try {
       const {
         instructorId,
@@ -30,8 +29,8 @@ export default class LectureController {
         price,
         category,
       });
-      return response.status(201).send();
-    } catch (e: any) {
+      return res.status(201).json();
+    } catch (e) {
       next(e);
     }
   }
@@ -50,31 +49,44 @@ export default class LectureController {
         desc,
         price,
       });
-    } catch (e: any) {
+    } catch (e) {
       next(e);
     }
-    return res.status(200).send();
+    return res.status(200).json();
   }
 
   async openLecture(req: Request, res: Response, next: NextFunction) {
     try {
       const id: number = parseInt(req.params["id"]);
       await this.lectureService.open(id);
-      return res.status(200).send();
-    } catch (e: any) {
+      return res.status(200).json();
+    } catch (e) {
       next(e);
     }
   }
 
-  async createEnrollment(req: Request, res: Response, next: NextFunction) {
+  // async createEnrollment(req: Request, res: Response, next: NextFunction) {
+  //   try {
+  //     const lectureId: number = parseInt(req.params["id"]);
+  //     const { studentId }: { studentId: number } = req.body;
+  //     const result = await this.lectureService.enroll({ lectureId, studentId });
+  //     return res.status(201).json({
+  //       id: result,
+  //     });
+  //   } catch (e) {
+  //     next(e);
+  //   }
+  // }
+
+  async createEnrollments(req: Request, res: Response, next: NextFunction) {
     try {
-      const lectureId: number = parseInt(req.params["id"]);
-      const { studentId }: { studentId: number } = req.body;
-      const result = await this.lectureService.enroll({ lectureId, studentId });
-      return response.status(201).send({
-        id: result,
-      });
-    } catch (e: any) {
+      const {
+        studentId,
+        lectureIds,
+      }: { studentId: number; lectureIds: number[] } = req.body;
+      await this.lectureService.enrollLectures({ lectureIds, studentId });
+      return res.status(201).json();
+    } catch (e) {
       next(e);
     }
   }
@@ -83,8 +95,8 @@ export default class LectureController {
     try {
       const id: number = parseInt(req.params["id"]);
       await this.lectureService.delete(id);
-      return res.status(200).send();
-    } catch (e: any) {
+      return res.status(200).json();
+    } catch (e) {
       next(e);
     }
   }

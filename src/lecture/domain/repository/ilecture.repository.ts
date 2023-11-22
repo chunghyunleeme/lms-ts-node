@@ -1,7 +1,7 @@
-import { Category } from "../category";
+import { Pool } from "mysql2";
 import Enrollment from "../enrollment";
 import Lecture from "../lecture";
-import { Status } from "../status";
+import { PoolConnection } from "mysql2/promise";
 
 export default interface ILectureRepository {
   save(lecture: Lecture): Promise<number>;
@@ -19,4 +19,6 @@ export default interface ILectureRepository {
   updateForOpen(lecture: Lecture): Promise<void>;
 
   softDelete(lecture: Lecture): Promise<void>;
+
+  getConnection(): Promise<PoolConnection>;
 }

@@ -181,16 +181,17 @@ export default class Lecture {
     if (this._enrollments == undefined) {
       throw new Error("잘못된 접근입니다.");
     }
-
-    const alreadyEnroll: boolean = this._enrollments.some(
-      (enrollment) => enrollment.student.id == student.id
-    );
-    if (alreadyEnroll) {
-      throw new Error("이미 수강 중인 강의는 신청할 수 없습니다.");
-    }
+    console.log("수강권", this._enrollments);
 
     if (this._status == Status.PRIVATE) {
       throw new Error("비공개된 강의는 수강 신청할 수 없습니다.");
+    }
+
+    const alreadyEnroll: boolean = this._enrollments.some((enrollment) => {
+      return enrollment.student.id == student.id;
+    });
+    if (alreadyEnroll) {
+      throw new Error("이미 수강 중인 강의는 신청할 수 없습니다.");
     }
 
     const enrollment = new Enrollment({

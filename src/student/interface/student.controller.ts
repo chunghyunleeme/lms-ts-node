@@ -10,7 +10,7 @@ export default class StudentController {
     try {
       const { email, nickName }: CreateStudentDto = req.body;
       const result = await this.studentService.join(email, nickName);
-      return res.status(201).send({
+      return res.status(201).json({
         id: result,
       });
     } catch (e: any) {
@@ -22,7 +22,7 @@ export default class StudentController {
     try {
       const id = req.params["id"];
       await this.studentService.withdraw(parseInt(id));
-      return res.status(200).send();
+      return res.status(200).json();
     } catch (e: any) {
       next(e);
     }

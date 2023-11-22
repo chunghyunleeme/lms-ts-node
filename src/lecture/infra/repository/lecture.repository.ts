@@ -6,6 +6,7 @@ import db from "../../../db";
 import { FieldPacket, ResultSetHeader, RowDataPacket } from "mysql2";
 import { Status } from "../../domain/status";
 import { BadRequestError } from "../../../http-error/bad-request.error";
+import { PoolConnection } from "mysql2/promise";
 @registry([{ token: "LectureRepository", useValue: "LectureRepository" }])
 @injectable()
 export default class LectureRepository implements ILectureRepository {
@@ -59,9 +60,11 @@ export default class LectureRepository implements ILectureRepository {
     const result = await db.query(
       "SELECT " +
         "l.id, l.instructor_id, l.title, l.description, l.price, l.category, l.status, l.num_of_students, l.created_at, l.updated_at, " +
-        "e.id AS enrollment_id, e.student_id, e.lecture_id, e.enrollment_date " +
+        "e.id AS enrollment_id, e.student_id, e.lecture_id, e.enrollment_date, " +
+        "s.nick_name AS student_nick_name " +
         "FROM lecture l " +
         "LEFT JOIN enrollment e ON l.id = e.lecture_id " +
+        "INNER JOIN student s ON e.student_id = s.id " +
         "WHERE l.id = ?",
       [id]
     );
@@ -128,23 +131,24 @@ export default class LectureRepository implements ILectureRepository {
     }
     const enrollments: Enrollment[] = [];
     for (let i = 0; i < data.length; ++i) {
+      console.log("data = ", data);
       enrollments.push(
         Enrollment.from({
           id: data[i].enrollment_id,
           lecture: Lecture.from({
-            id: data.id,
-            title: data.title,
-            desc: data.description,
-            price: data.price,
-            category: data.category,
-            status: data.status,
-            numberOfStudent: data.number_of_student,
-            createdAt: data.created_at,
-            updatedAt: data.updated_at,
+            id: data[i].id,
+            title: data[i].title,
+            desc: data[i].description,
+            price: data[i].price,
+            category: data[i].category,
+            status: data[i].status,
+            numberOfStudent: data[i].number_of_student,
+            createdAt: data[i].created_at,
+            updatedAt: data[i].updated_at,
           }),
           student: {
-            id: data.student_id,
-            nickName: "nickName",
+            id: data[i].student_id,
+            nickName: data[i].student_nick_name,
           },
           enrollmentDate: new Date(data[i].enrollment_date),
         })
@@ -152,8 +156,11 @@ export default class LectureRepository implements ILectureRepository {
       return enrollments;
     }
   }
+  async getConnection(): Promise<PoolConnection> {
+    return await db.getConnection();
+  }
 
-  public closeConnection() {
+  closeConnection() {
     db.end();
   }
 }

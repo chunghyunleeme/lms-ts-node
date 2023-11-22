@@ -45,7 +45,7 @@ export default class StudentRepository implements IStudentRepository {
   }
 
   mapToDomainEntity(data: RowDataPacket) {
-    if (data.length === 0) {
+    if (!data) {
       return null;
     }
 

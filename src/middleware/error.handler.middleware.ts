@@ -8,11 +8,11 @@ const ErrorHandlerMiddleware = (
   next: NextFunction
 ) => {
   if (!(err instanceof HttpError)) {
-    return res.status(500).send({
+    return res.status(500).json({
       message: err.message,
     });
   }
-  return res.status(err.httpCode).send({
+  return res.status(err.httpCode).json({
     message: err.message,
   });
 };
