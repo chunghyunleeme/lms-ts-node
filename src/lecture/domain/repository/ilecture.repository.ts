@@ -1,10 +1,9 @@
-import { Pool } from "mysql2";
 import Enrollment from "../enrollment";
 import Lecture from "../lecture";
 import { PoolConnection } from "mysql2/promise";
 
 export default interface ILectureRepository {
-  save(lecture: Lecture): Promise<number>;
+  save(lecture: Lecture, conn?: PoolConnection): Promise<number>;
 
   saveEnrollment(enrollment: Enrollment, conn: PoolConnection): Promise<number>;
 

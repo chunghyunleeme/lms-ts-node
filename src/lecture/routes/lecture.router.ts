@@ -6,7 +6,7 @@ import { container } from "tsyringe";
 const lectureRouter = Router();
 
 lectureRouter.post("/", (req, res, next) => {
-  container.resolve(LectureController).createLecture(req, res, next);
+  container.resolve(LectureController).createLectures(req, res, next);
 });
 
 lectureRouter.post("/enrollments", (req, res, next) => {

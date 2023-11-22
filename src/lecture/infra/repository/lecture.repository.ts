@@ -1,4 +1,3 @@
-import { injectable, registry } from "tsyringe";
 import Enrollment from "../../domain/enrollment";
 import Lecture from "../../domain/lecture";
 import ILectureRepository from "../../domain/repository/ilecture.repository";
@@ -10,20 +9,24 @@ import { PoolConnection } from "mysql2/promise";
 
 export default class LectureRepository implements ILectureRepository {
   constructor() {}
-  async save(lecture: Lecture): Promise<number> {
+  async save(lecture: Lecture, conn?: PoolConnection): Promise<number> {
+    const connection = conn ? conn : await this.getConnection();
     const query =
       "INSERT INTO lecture (instructor_id, title, description, price, category, status, num_of_students, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    const [result]: [ResultSetHeader, FieldPacket[]] = await db.query(query, [
-      lecture.instructor?.id,
-      lecture.title,
-      lecture.desc,
-      lecture.price.money,
-      lecture.category,
-      lecture.status,
-      lecture.numOfStudent,
-      lecture.createdAt,
-      lecture.updatedAt,
-    ]);
+    const [result]: [ResultSetHeader, FieldPacket[]] = await connection.query(
+      query,
+      [
+        lecture.instructor?.id,
+        lecture.title,
+        lecture.desc,
+        lecture.price.money,
+        lecture.category,
+        lecture.status,
+        lecture.numOfStudent,
+        lecture.createdAt,
+        lecture.updatedAt,
+      ]
+    );
 
     return result.insertId;
   }
@@ -129,7 +132,7 @@ export default class LectureRepository implements ILectureRepository {
   }
 
   private mapToEnrollments(data: RowDataPacket) {
-    if (data.length == 0) {
+    if (!data || !data[0].enrollment_id || data.length == 0) {
       return;
     }
     const enrollments: Enrollment[] = [];

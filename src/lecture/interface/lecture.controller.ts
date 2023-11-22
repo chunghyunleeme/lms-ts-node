@@ -5,7 +5,25 @@ import { singleton } from "tsyringe";
 @singleton()
 export default class LectureController {
   constructor(private readonly lectureService: LectureService) {}
-
+  async createLectures(req: Request, res: Response, next: NextFunction) {
+    try {
+      const lectures: Array<{
+        instructorId: string;
+        title: string;
+        desc: string;
+        price: number;
+        category: Category;
+      }> = req.body;
+      const MAX_SAVE_COUNT = 10;
+      if (MAX_SAVE_COUNT < lectures.length) {
+        throw new Error("최대 등록 가능 갯수는 10개입니다.");
+      }
+      await this.lectureService.saveLectures(lectures);
+      return res.status(201).json();
+    } catch (e) {
+      next(e);
+    }
+  }
   async createLecture(req: Request, res: Response, next: NextFunction) {
     try {
       const {

@@ -9,7 +9,6 @@ import { IStudentService } from "./adapter/istudent.service";
 import { BadRequestError } from "../../http-error/bad-request.error";
 import { CanNotFindLecture } from "../../error/cannot-find-lecture.error";
 import { CanNotFindStudent } from "../../error/cannot-find-student.error";
-import db from "../../db";
 import { PoolConnection } from "mysql2/promise";
 
 @singleton()
@@ -29,12 +28,14 @@ export default class LectureService {
     desc,
     price,
     category,
+    conn,
   }: {
     instructorId: string;
     title: string;
     desc: string;
     price: number;
     category: Category;
+    conn?: PoolConnection;
   }): Promise<void> {
     const instructor: Instructor | null = await this.instructorService.findById(
       instructorId
@@ -55,8 +56,40 @@ export default class LectureService {
         desc,
         price,
         category,
-      })
+      }),
+      conn
     );
+  }
+
+  async saveLectures(
+    lectures: Array<{
+      instructorId: string;
+      title: string;
+      desc: string;
+      price: number;
+      category: Category;
+    }>
+  ) {
+    const conn = await this.lectureRepository.getConnection();
+    try {
+      conn.beginTransaction();
+      for (const lecture of lectures) {
+        await this.save({
+          instructorId: lecture.instructorId,
+          title: lecture.title,
+          desc: lecture.desc,
+          price: lecture.price,
+          category: lecture.category,
+          conn,
+        });
+      }
+      conn.commit();
+    } catch (e) {
+      conn.rollback();
+      throw e;
+    } finally {
+      conn.release();
+    }
   }
 
   async update({
