@@ -6,7 +6,7 @@ import { PoolConnection } from "mysql2/promise";
 export default interface ILectureRepository {
   save(lecture: Lecture): Promise<number>;
 
-  saveEnrollment(enrollment: Enrollment): Promise<number>;
+  saveEnrollment(enrollment: Enrollment, conn: PoolConnection): Promise<number>;
 
   findById(id: number): Promise<Lecture | null>;
 

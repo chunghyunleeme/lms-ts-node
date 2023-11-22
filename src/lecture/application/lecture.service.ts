@@ -10,6 +10,7 @@ import { BadRequestError } from "../../http-error/bad-request.error";
 import { CanNotFindLecture } from "../../error/cannot-find-lecture.error";
 import { CanNotFindStudent } from "../../error/cannot-find-student.error";
 import db from "../../db";
+import { PoolConnection } from "mysql2/promise";
 
 @singleton()
 export default class LectureService {
@@ -107,9 +108,9 @@ export default class LectureService {
     const conn = await this.lectureRepository.getConnection();
     try {
       await conn.beginTransaction();
-      await Promise.all(
-        lectureIds.map((lectureId) => this.enroll({ lectureId, studentId }))
-      );
+      for (const lectureId of lectureIds) {
+        await this.enroll({ lectureId, studentId, conn });
+      }
       await conn.commit();
     } catch (e) {
       conn.rollback();
@@ -122,9 +123,11 @@ export default class LectureService {
   private async enroll({
     lectureId,
     studentId,
+    conn,
   }: {
     lectureId: number;
     studentId: number;
+    conn: PoolConnection;
   }): Promise<number> {
     const lecture = await this.lectureRepository.findByIdWithEnrollments(
       lectureId
@@ -139,7 +142,8 @@ export default class LectureService {
     }
 
     return await this.lectureRepository.saveEnrollment(
-      lecture.enrollment(student)
+      lecture.enrollment(student),
+      conn
     );
   }
 

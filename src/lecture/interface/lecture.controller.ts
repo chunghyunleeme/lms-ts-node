@@ -65,19 +65,6 @@ export default class LectureController {
     }
   }
 
-  // async createEnrollment(req: Request, res: Response, next: NextFunction) {
-  //   try {
-  //     const lectureId: number = parseInt(req.params["id"]);
-  //     const { studentId }: { studentId: number } = req.body;
-  //     const result = await this.lectureService.enroll({ lectureId, studentId });
-  //     return res.status(201).json({
-  //       id: result,
-  //     });
-  //   } catch (e) {
-  //     next(e);
-  //   }
-  // }
-
   async createEnrollments(req: Request, res: Response, next: NextFunction) {
     try {
       const {

@@ -7,8 +7,7 @@ import { FieldPacket, ResultSetHeader, RowDataPacket } from "mysql2";
 import { Status } from "../../domain/status";
 import { BadRequestError } from "../../../http-error/bad-request.error";
 import { PoolConnection } from "mysql2/promise";
-@registry([{ token: "LectureRepository", useValue: "LectureRepository" }])
-@injectable()
+
 export default class LectureRepository implements ILectureRepository {
   constructor() {}
   async save(lecture: Lecture): Promise<number> {
@@ -29,10 +28,13 @@ export default class LectureRepository implements ILectureRepository {
     return result.insertId;
   }
 
-  async saveEnrollment(enrollment: Enrollment): Promise<number> {
+  async saveEnrollment(
+    enrollment: Enrollment,
+    conn: PoolConnection
+  ): Promise<number> {
     const query =
       "INSERT INTO enrollment (lecture_id, student_id, enrollment_date) VALUES (? ,?, ?)";
-    const [result]: [ResultSetHeader, FieldPacket[]] = await db.query(query, [
+    const [result]: [ResultSetHeader, FieldPacket[]] = await conn.query(query, [
       enrollment.lecture.id,
       enrollment.student.id,
       enrollment.enrollmentDate,
@@ -47,6 +49,7 @@ export default class LectureRepository implements ILectureRepository {
     const lecture: Lecture | null = this.mapToDomainEntity(lectureData);
     return lecture;
   }
+
   async findByTitle(title: string): Promise<Lecture | null> {
     const result = await db.query("SELECT * FROM lecture WHERE title = ?", [
       title,
@@ -64,7 +67,7 @@ export default class LectureRepository implements ILectureRepository {
         "s.nick_name AS student_nick_name " +
         "FROM lecture l " +
         "LEFT JOIN enrollment e ON l.id = e.lecture_id " +
-        "INNER JOIN student s ON e.student_id = s.id " +
+        "LEFT JOIN student s ON e.student_id = s.id " +
         "WHERE l.id = ?",
       [id]
     );
@@ -131,7 +134,6 @@ export default class LectureRepository implements ILectureRepository {
     }
     const enrollments: Enrollment[] = [];
     for (let i = 0; i < data.length; ++i) {
-      console.log("data = ", data);
       enrollments.push(
         Enrollment.from({
           id: data[i].enrollment_id,
