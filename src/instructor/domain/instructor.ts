@@ -7,11 +7,11 @@ export default class Instructor {
     this._name = name;
   }
 
-  public get id() {
+  get id() {
     return this._id;
   }
 
-  public get name() {
+  get name() {
     return this._name;
   }
 }

@@ -33,7 +33,7 @@ export class StudentService {
     await this.studentRepository.updateForWithdrawal(student);
   }
 
-  public async findById(id: number): Promise<Student | null> {
+  async findById(id: number): Promise<Student | null> {
     return await this.studentRepository.findById(id);
   }
 

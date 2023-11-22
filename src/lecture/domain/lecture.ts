@@ -139,11 +139,11 @@ export default class Lecture {
     return this._deletedAt;
   }
 
-  public open(): void {
+  open(): void {
     this._status = Status.PUBLIC;
   }
 
-  public update({
+  update({
     title,
     desc,
     price,
@@ -167,7 +167,7 @@ export default class Lecture {
     this._updatedAt = new Date();
   }
 
-  public delete(): void {
+  delete(): void {
     if (this._enrollments == undefined) {
       throw new BadRequestError("잘못된 접근입니다.");
     }
@@ -177,7 +177,7 @@ export default class Lecture {
     }
   }
 
-  public enrollment(student: Student): Enrollment {
+  enrollment(student: Student): Enrollment {
     if (this._enrollments == undefined) {
       throw new Error("잘못된 접근입니다.");
     }

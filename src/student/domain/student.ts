@@ -42,7 +42,7 @@ export default class Student {
     return this._deletedAt;
   }
 
-  public withdraw(): void {
+  withdraw(): void {
     const deleteDate = new Date();
     this._email += `/${deleteDate.toISOString()}`;
     this._deletedAt = deleteDate;
