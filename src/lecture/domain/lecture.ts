@@ -163,8 +163,6 @@ export default class Lecture {
     if (price) {
       this._price = new Money(price);
     }
-
-    this._updatedAt = new Date();
   }
 
   delete(): void {

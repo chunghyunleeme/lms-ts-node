@@ -87,11 +87,12 @@ export default class LectureRepository implements ILectureRepository {
 
   async update(lecture: Lecture): Promise<void> {
     const query =
-      "UPDATE lecture SET title = ?, description = ?, price = ? WHERE id = ?";
+      "UPDATE lecture SET title = ?, description = ?, price = ?, updated_at = ? WHERE id = ?";
     await db.query(query, [
       lecture.title,
       lecture.desc,
       lecture.price.money,
+      new Date(),
       lecture.id,
     ]);
   }
@@ -100,8 +101,8 @@ export default class LectureRepository implements ILectureRepository {
     if (lecture.status != Status.PUBLIC) {
       throw new BadRequestError();
     }
-    const query = "UPDATE lecture SET status = ? WHERE id = ?";
-    await db.query(query, [lecture.status, lecture.id]);
+    const query = "UPDATE lecture SET status = ?, updated_at = ? WHERE id = ?";
+    await db.query(query, [lecture.status, new Date(), lecture.id]);
   }
 
   async softDelete(lecture: Lecture): Promise<void> {
