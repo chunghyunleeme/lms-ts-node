@@ -72,7 +72,7 @@ export default class LectureService {
   ) {
     const conn = await this.lectureRepository.getConnection();
     try {
-      conn.beginTransaction();
+      await conn.beginTransaction();
       for (const lecture of lectures) {
         await this.save({
           instructorId: lecture.instructorId,
@@ -83,9 +83,9 @@ export default class LectureService {
           conn,
         });
       }
-      conn.commit();
+      await conn.commit();
     } catch (e) {
-      conn.rollback();
+      await conn.rollback();
       throw e;
     } finally {
       conn.release();
@@ -103,32 +103,51 @@ export default class LectureService {
     desc?: string;
     price?: number;
   }): Promise<void> {
-    const lecture = await this.lectureRepository.findById(lectureId);
-    if (!lecture) {
-      throw new CanNotFindLecture();
+    const conn = await this.lectureRepository.getConnection();
+    try {
+      conn.beginTransaction();
+      const lecture = await this.lectureRepository.findById(lectureId, conn);
+      if (!lecture) {
+        throw new CanNotFindLecture();
+      }
+
+      lecture.update({
+        title,
+        desc,
+        price,
+      });
+
+      await this.lectureRepository.update(lecture, conn);
+    } catch (e) {
+      await conn.rollback();
+      throw e;
+    } finally {
+      conn.release();
     }
-
-    lecture.update({
-      title,
-      desc,
-      price,
-    });
-
-    await this.lectureRepository.update(lecture);
   }
 
   async open(id: number): Promise<void> {
-    const lecture = await this.lectureRepository.findById(id);
-    if (!lecture) {
-      throw new CanNotFindLecture();
-    }
-    if (lecture.status == Status.PUBLIC) {
-      throw new BadRequestError("이미 공개된 강의 입니다.");
-    }
+    const conn = await this.lectureRepository.getConnection();
+    try {
+      conn.beginTransaction();
+      const lecture = await this.lectureRepository.findById(id, conn);
 
-    lecture.open();
+      if (!lecture) {
+        throw new CanNotFindLecture();
+      }
+      if (lecture.status == Status.PUBLIC) {
+        throw new BadRequestError("이미 공개된 강의 입니다.");
+      }
 
-    await this.lectureRepository.updateForOpen(lecture);
+      lecture.open();
+
+      await this.lectureRepository.updateForOpen(lecture, conn);
+    } catch (e) {
+      await conn.rollback();
+      throw e;
+    } finally {
+      conn.release();
+    }
   }
 
   async enrollLectures({
@@ -163,7 +182,8 @@ export default class LectureService {
     conn: PoolConnection;
   }): Promise<number> {
     const lecture = await this.lectureRepository.findByIdWithEnrollments(
-      lectureId
+      lectureId,
+      conn
     );
     if (!lecture) {
       throw new CanNotFindLecture();
@@ -181,14 +201,23 @@ export default class LectureService {
   }
 
   async delete(id: number): Promise<void> {
-    const lecture: Lecture | null =
-      await this.lectureRepository.findByIdWithEnrollments(id);
-    if (!lecture) {
-      throw new CanNotFindLecture();
+    const conn = await this.lectureRepository.getConnection();
+    try {
+      conn.beginTransaction();
+      const lecture: Lecture | null =
+        await this.lectureRepository.findByIdWithEnrollments(id, conn);
+      if (!lecture) {
+        throw new CanNotFindLecture();
+      }
+
+      lecture.delete();
+
+      await this.lectureRepository.softDelete(lecture, conn);
+    } catch (e) {
+      await conn.rollback();
+      throw e;
+    } finally {
+      conn.release();
     }
-
-    lecture.delete();
-
-    await this.lectureRepository.softDelete(lecture);
   }
 }

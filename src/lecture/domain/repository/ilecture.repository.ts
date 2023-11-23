@@ -8,19 +8,27 @@ export default interface ILectureRepository {
 
   saveEnrollment(enrollment: Enrollment, conn: PoolConnection): Promise<number>;
 
-  findById(id: number): Promise<Lecture | null>;
+  findById(id: number, conn: PoolConnection): Promise<Lecture | null>;
 
-  findByIdWithEnrollments(id: number): Promise<Lecture | null>;
+  findByIdWithEnrollments(
+    id: number,
+    conn: PoolConnection
+  ): Promise<Lecture | null>;
 
   findByTitle(title: string): Promise<Lecture | null>;
 
-  update(lecture: Lecture): Promise<void>;
+  update(lecture: Lecture, conn: PoolConnection): Promise<void>;
 
-  updateForOpen(lecture: Lecture): Promise<void>;
+  updateForOpen(lecture: Lecture, conn: PoolConnection): Promise<void>;
 
-  softDelete(lecture: Lecture): Promise<void>;
-
-  findByIdForDetail(id: number): Promise<LectureDetail | null>;
+  softDelete(lecture: Lecture, conn: PoolConnection): Promise<void>;
 
   getConnection(): Promise<PoolConnection>;
+
+  /**
+   * 조회용 레포지토리 메서드
+   * @param id
+   */
+
+  findByIdForDetail(id: number): Promise<LectureDetail | null>;
 }

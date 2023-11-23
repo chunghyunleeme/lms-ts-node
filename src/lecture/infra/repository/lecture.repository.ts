@@ -50,8 +50,8 @@ export default class LectureRepository implements ILectureRepository {
     return result.insertId;
   }
 
-  async findById(id: number): Promise<Lecture | null> {
-    const result = await db.query("SELECT * FROM lecture WHERE id = ?", [id]);
+  async findById(id: number, conn: PoolConnection): Promise<Lecture | null> {
+    const result = await conn.query("SELECT * FROM lecture WHERE id = ?", [id]);
     const lectureData: RowDataPacket[0] = result[0];
     const lecture: Lecture | null = this.mapToDomainEntity(lectureData);
     return lecture;
@@ -66,8 +66,11 @@ export default class LectureRepository implements ILectureRepository {
     return lecture;
   }
 
-  async findByIdWithEnrollments(id: number): Promise<Lecture | null> {
-    const result = await db.query(
+  async findByIdWithEnrollments(
+    id: number,
+    conn: PoolConnection
+  ): Promise<Lecture | null> {
+    const result = await conn.query(
       "SELECT " +
         "l.id, l.instructor_id, l.title, l.description, l.price, l.category, l.status, l.num_of_students, l.created_at, l.updated_at, " +
         "e.id AS enrollment_id, e.student_id, e.lecture_id, e.enrollment_date, " +
@@ -89,10 +92,10 @@ export default class LectureRepository implements ILectureRepository {
     return lecture;
   }
 
-  async update(lecture: Lecture): Promise<void> {
+  async update(lecture: Lecture, conn: PoolConnection): Promise<void> {
     const query =
       "UPDATE lecture SET title = ?, description = ?, price = ?, updated_at = ? WHERE id = ?";
-    await db.query(query, [
+    await conn.query(query, [
       lecture.title,
       lecture.desc,
       lecture.price.money,
@@ -101,16 +104,16 @@ export default class LectureRepository implements ILectureRepository {
     ]);
   }
 
-  async updateForOpen(lecture: Lecture): Promise<void> {
+  async updateForOpen(lecture: Lecture, conn: PoolConnection): Promise<void> {
     if (lecture.status != Status.PUBLIC) {
       throw new BadRequestError();
     }
     const query = "UPDATE lecture SET status = ?, updated_at = ? WHERE id = ?";
-    await db.query(query, [lecture.status, new Date(), lecture.id]);
+    await conn.query(query, [lecture.status, new Date(), lecture.id]);
   }
 
-  async softDelete(lecture: Lecture): Promise<void> {
-    await db.query("UPDATE lecture SET deleted_at = ? WHERE id = ?", [
+  async softDelete(lecture: Lecture, conn: PoolConnection): Promise<void> {
+    await conn.query("UPDATE lecture SET deleted_at = ? WHERE id = ?", [
       new Date(),
       lecture.id,
     ]);
