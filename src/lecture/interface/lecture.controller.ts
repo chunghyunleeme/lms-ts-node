@@ -1,10 +1,16 @@
 import { NextFunction, Request, Response } from "express";
 import LectureService from "../application/lecture.service";
 import { Category } from "../domain/category";
-import { singleton } from "tsyringe";
+import { inject, singleton } from "tsyringe";
+import ILectureRepository from "../domain/repository/ilecture.repository";
+import { CanNotFindLecture } from "../../error/cannot-find-lecture.error";
 @singleton()
 export default class LectureController {
-  constructor(private readonly lectureService: LectureService) {}
+  constructor(
+    @inject("LectureRepository")
+    private readonly lectureRepository: ILectureRepository,
+    private readonly lectureService: LectureService
+  ) {}
   async createLectures(req: Request, res: Response, next: NextFunction) {
     try {
       const lectures: Array<{
@@ -101,6 +107,19 @@ export default class LectureController {
       const id: number = parseInt(req.params["id"]);
       await this.lectureService.delete(id);
       return res.status(200).json();
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async findById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const id: number = parseInt(req.params.id);
+      const result = await this.lectureRepository.findByIdForDetail(id);
+      if (!result) {
+        throw new CanNotFindLecture();
+      }
+      return res.status(200).json(result);
     } catch (e) {
       next(e);
     }

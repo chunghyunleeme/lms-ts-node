@@ -6,6 +6,10 @@ import { FieldPacket, ResultSetHeader, RowDataPacket } from "mysql2";
 import { Status } from "../../domain/status";
 import { BadRequestError } from "../../../http-error/bad-request.error";
 import { PoolConnection } from "mysql2/promise";
+import {
+  EnrolledStudent,
+  LectureDetail,
+} from "../../interface/dto/lecture.detail";
 
 export default class LectureRepository implements ILectureRepository {
   constructor() {}
@@ -162,11 +166,67 @@ export default class LectureRepository implements ILectureRepository {
       return enrollments;
     }
   }
+
+  /**
+   * 조회용 쿼리
+   */
+  async findByIdForDetail(id: number): Promise<LectureDetail | null> {
+    const conn = await this.getConnection();
+    const query =
+      "SELECT l.id AS lecture_id, l.title, l.description, l.price, l.category, l.status, l.created_at, l.updated_at, l.deleted_at, " +
+      "s.id AS student_id, s.nick_name AS student_nick_name, s.deleted_at AS student_deleted_At, e.enrollment_date " +
+      "FROM lecture l " +
+      "LEFT JOIN enrollment e ON l.id = e.lecture_id " +
+      "LEFT JOIN student s ON e.student_id = s.id AND s.deleted_at IS NULL " +
+      "WHERE l.id = ? ";
+    const result = await conn.query(query, [id]);
+    const lectureData: RowDataPacket[0] = result[0];
+    const students: EnrolledStudent[] | null =
+      this.mapToEnrolledStudents(lectureData);
+    const test = this.mapToLectureDetail(lectureData, students);
+    console.log("test = ", test);
+    return test;
+  }
+
+  private mapToLectureDetail(
+    data: RowDataPacket,
+    students: EnrolledStudent[] | null
+  ) {
+    if (!data || data.length == 0) {
+      return null;
+    }
+    return new LectureDetail({
+      id: data[0].lecture_id,
+      title: data[0].title,
+      category: data[0].category,
+      price: data[0].price,
+      createdAt: data[0].created_at,
+      updatedAt: data[0].updated_at,
+      students,
+    });
+  }
+
+  private mapToEnrolledStudents(data: RowDataPacket): EnrolledStudent[] | null {
+    if (!data || data.length == 0) {
+      return null;
+    }
+    return data
+      .filter((enrollment: any) => enrollment.student_id != null)
+      .map(
+        (enrollment: any) =>
+          new EnrolledStudent({
+            id: enrollment.student_id,
+            nickName: enrollment.student_nick_name,
+            enrollmentDate: enrollment.enrollment_date,
+          })
+      );
+  }
+
   async getConnection(): Promise<PoolConnection> {
     return await db.getConnection();
   }
 
-  closeConnection() {
-    db.end();
+  async closeConnection() {
+    await db.end();
   }
 }

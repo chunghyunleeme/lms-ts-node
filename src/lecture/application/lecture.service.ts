@@ -1,4 +1,4 @@
-import { inject, injectable, singleton } from "tsyringe";
+import { inject, singleton } from "tsyringe";
 import { Category } from "../domain/category";
 import { Instructor } from "../domain/instructor";
 import Lecture from "../domain/lecture";

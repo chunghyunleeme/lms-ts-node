@@ -1,3 +1,4 @@
+import { LectureDetail } from "../../interface/dto/lecture.detail";
 import Enrollment from "../enrollment";
 import Lecture from "../lecture";
 import { PoolConnection } from "mysql2/promise";
@@ -18,6 +19,8 @@ export default interface ILectureRepository {
   updateForOpen(lecture: Lecture): Promise<void>;
 
   softDelete(lecture: Lecture): Promise<void>;
+
+  findByIdForDetail(id: number): Promise<LectureDetail | null>;
 
   getConnection(): Promise<PoolConnection>;
 }
