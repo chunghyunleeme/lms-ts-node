@@ -22,7 +22,51 @@ export default class LectureService {
     private readonly studentService: IStudentService
   ) {}
 
-  async save({
+  // TODO. 병렬처리
+  // 1. 이터레이터에서 커넥션 각각 가져옴
+  // 2. 배열에 가져온 커넥션 push
+  // 3. Promise.allsettled에 reject 체크
+  // 4. 커넥션 배열 전부 rollback
+  /**
+   * 강의 N개를 등록한다.
+   * 한개의 강의는 길이 1 배열
+   * @param lectures
+   */
+  async saveLectures(
+    lectures: Array<{
+      instructorId: string;
+      title: string;
+      desc: string;
+      price: number;
+      category: Category;
+    }>
+  ) {
+    const conn = await this.lectureRepository.getConnection();
+    try {
+      await conn.beginTransaction();
+      for (const lecture of lectures) {
+        await this.save({
+          instructorId: lecture.instructorId,
+          title: lecture.title,
+          desc: lecture.desc,
+          price: lecture.price,
+          category: lecture.category,
+          conn,
+        });
+      }
+      await conn.commit();
+    } catch (e) {
+      await conn.rollback();
+      throw e;
+    } finally {
+      conn.release();
+    }
+  }
+
+  /**
+   * 강의를 등록한다.
+   */
+  private async save({
     instructorId,
     title,
     desc,
@@ -61,37 +105,9 @@ export default class LectureService {
     );
   }
 
-  async saveLectures(
-    lectures: Array<{
-      instructorId: string;
-      title: string;
-      desc: string;
-      price: number;
-      category: Category;
-    }>
-  ) {
-    const conn = await this.lectureRepository.getConnection();
-    try {
-      await conn.beginTransaction();
-      for (const lecture of lectures) {
-        await this.save({
-          instructorId: lecture.instructorId,
-          title: lecture.title,
-          desc: lecture.desc,
-          price: lecture.price,
-          category: lecture.category,
-          conn,
-        });
-      }
-      await conn.commit();
-    } catch (e) {
-      await conn.rollback();
-      throw e;
-    } finally {
-      conn.release();
-    }
-  }
-
+  /**
+   * 강의의 기본 정보를 수정한다.
+   */
   async update({
     lectureId,
     title,
@@ -118,6 +134,7 @@ export default class LectureService {
       });
 
       await this.lectureRepository.update(lecture, conn);
+      await conn.commit();
     } catch (e) {
       await conn.rollback();
       throw e;
@@ -126,6 +143,10 @@ export default class LectureService {
     }
   }
 
+  /**
+   * 강의의 상태를 공개로 변경한다.
+   * @param id
+   */
   async open(id: number): Promise<void> {
     const conn = await this.lectureRepository.getConnection();
     try {
@@ -142,6 +163,7 @@ export default class LectureService {
       lecture.open();
 
       await this.lectureRepository.updateForOpen(lecture, conn);
+      await conn.commit();
     } catch (e) {
       await conn.rollback();
       throw e;
@@ -150,6 +172,9 @@ export default class LectureService {
     }
   }
 
+  /**
+   * 학생이 N개의 강의에 등록한다.
+   */
   async enrollLectures({
     lectureIds,
     studentId,
@@ -172,6 +197,9 @@ export default class LectureService {
     }
   }
 
+  /**
+   * 학생이 강의에 등록한다.
+   */
   private async enroll({
     lectureId,
     studentId,
@@ -200,6 +228,9 @@ export default class LectureService {
     );
   }
 
+  /**
+   * 강의를 삭제한다.
+   */
   async delete(id: number): Promise<void> {
     const conn = await this.lectureRepository.getConnection();
     try {
@@ -213,6 +244,7 @@ export default class LectureService {
       lecture.delete();
 
       await this.lectureRepository.softDelete(lecture, conn);
+      await conn.commit();
     } catch (e) {
       await conn.rollback();
       throw e;

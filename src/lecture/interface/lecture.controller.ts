@@ -30,34 +30,6 @@ export default class LectureController {
       next(e);
     }
   }
-  async createLecture(req: Request, res: Response, next: NextFunction) {
-    try {
-      const {
-        instructorId,
-        title,
-        desc,
-        price,
-        category,
-      }: {
-        instructorId: string;
-        title: string;
-        desc: string;
-        price: number;
-        category: Category;
-      } = req.body;
-
-      await this.lectureService.save({
-        instructorId,
-        title,
-        desc,
-        price,
-        category,
-      });
-      return res.status(201).json();
-    } catch (e) {
-      next(e);
-    }
-  }
 
   async updateLecture(
     req: Request,
