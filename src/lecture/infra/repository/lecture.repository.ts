@@ -10,6 +10,8 @@ import {
   EnrolledStudent,
   LectureDetail,
 } from "../../interface/dto/lecture.detail";
+import LectureSummary from "../../interface/dto/lecture.summary";
+import { Category } from "../../domain/category";
 
 export default class LectureRepository implements ILectureRepository {
   constructor() {}
@@ -186,9 +188,20 @@ export default class LectureRepository implements ILectureRepository {
     const lectureData: RowDataPacket[0] = result[0];
     const students: EnrolledStudent[] | null =
       this.mapToEnrolledStudents(lectureData);
-    const test = this.mapToLectureDetail(lectureData, students);
-    console.log("test = ", test);
-    return test;
+    return this.mapToLectureDetail(lectureData, students);
+  }
+
+  async findAll(): Promise<LectureSummary[]> {
+    const conn = await this.getConnection();
+    const query =
+      "SELECT l.id AS lecture_id, l.category, l.title, l.price, l.num_of_students, l.created_at, " +
+      "i.name AS instructor_name " +
+      "FROM lecture l " +
+      "INNER JOIN instructor i ON l.instructor_id = i.id " +
+      "WHERE l.status = ?";
+    const result = await conn.query(query, [Status.PUBLIC]);
+    const lectureData: RowDataPacket[0] = result[0];
+    return this.mapToLectureSummaries(lectureData);
   }
 
   private mapToLectureDetail(
@@ -223,6 +236,23 @@ export default class LectureRepository implements ILectureRepository {
             enrollmentDate: enrollment.enrollment_date,
           })
       );
+  }
+
+  private mapToLectureSummaries(data: RowDataPacket): LectureSummary[] {
+    if (!data || data.length == 0) {
+      return [];
+    }
+    return data.map((lectureWithInstructor: any) => {
+      return new LectureSummary({
+        id: lectureWithInstructor.lecture_id,
+        category: lectureWithInstructor.category,
+        title: lectureWithInstructor.title,
+        price: lectureWithInstructor.price,
+        instructorName: lectureWithInstructor.instructor_name,
+        numOfStudents: lectureWithInstructor.num_of_students,
+        createdAt: lectureWithInstructor.created_at,
+      });
+    });
   }
 
   async getConnection(): Promise<PoolConnection> {

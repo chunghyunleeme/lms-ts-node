@@ -1,4 +1,5 @@
 import { LectureDetail } from "../../interface/dto/lecture.detail";
+import LectureSummary from "../../interface/dto/lecture.summary";
 import Enrollment from "../enrollment";
 import Lecture from "../lecture";
 import { PoolConnection } from "mysql2/promise";
@@ -31,4 +32,5 @@ export default interface ILectureRepository {
    */
 
   findByIdForDetail(id: number): Promise<LectureDetail | null>;
+  findAll(): Promise<LectureSummary[]>;
 }

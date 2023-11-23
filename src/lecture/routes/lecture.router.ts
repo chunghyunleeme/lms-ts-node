@@ -17,6 +17,10 @@ lectureRouter.get("/:id", (req, res, next) => {
   container.resolve(LectureController).findById(req, res, next);
 });
 
+lectureRouter.get("/", (req, res, next) => {
+  container.resolve(LectureController).findAll(req, res, next);
+});
+
 lectureRouter.patch("/:id/open", (req, res, next) => {
   container.resolve(LectureController).openLecture(req, res, next);
 });

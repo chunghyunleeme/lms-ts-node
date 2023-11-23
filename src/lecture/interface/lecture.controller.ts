@@ -96,4 +96,13 @@ export default class LectureController {
       next(e);
     }
   }
+
+  async findAll(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await this.lectureRepository.findAll();
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  }
 }
