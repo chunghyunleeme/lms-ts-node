@@ -1,14 +1,13 @@
+import { PageRequest } from "../../../../common/page.request";
 import { BadRequestError } from "../../../../http-error/bad-request.error";
 import { Category } from "../../category";
 
-export default class LectureSearchRequest {
+export default class LectureSearchRequest extends PageRequest {
   private _instructorName: string;
   private _lectureTitle: string;
   private _studentId: number;
   private _category: Category;
   private _sortBy: SortBy;
-  private _page: number;
-  private _pageSize: number;
 
   constructor({
     instructorName,
@@ -27,6 +26,7 @@ export default class LectureSearchRequest {
     page: number;
     pageSize: number;
   }) {
+    super();
     if (page < 1) {
       throw new BadRequestError("페이지는 1보다 작을 수 없습니다.");
     }
@@ -38,8 +38,8 @@ export default class LectureSearchRequest {
     this._studentId = +studentId;
     this._category = category;
     this._sortBy = sortBy;
-    this._page = +page;
-    this._pageSize = +pageSize;
+    this.page = +page;
+    this.pageSize = +pageSize;
   }
 
   get instructorName() {
@@ -60,14 +60,6 @@ export default class LectureSearchRequest {
 
   get sortBy() {
     return this._sortBy;
-  }
-
-  get page() {
-    return this._page;
-  }
-
-  get pageSize() {
-    return this._pageSize;
   }
 }
 

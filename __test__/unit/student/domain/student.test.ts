@@ -1,4 +1,4 @@
-import Student from "../../../src/student/domain/student";
+import Student from "../../../../src/student/domain/student";
 
 describe("student test", () => {
   it("학생 생성 테스트", () => {

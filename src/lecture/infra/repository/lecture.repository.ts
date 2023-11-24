@@ -241,9 +241,8 @@ export default class LectureRepository implements ILectureRepository {
     }
 
     if (param.page && param.pageSize) {
-      const offset = (param.page - 1) * param.pageSize;
       query += " LIMIT ? OFFSET ?";
-      params.push(+param.pageSize, offset);
+      params.push(param.limit, param.offset);
     }
 
     const result = await conn.query(query, params);

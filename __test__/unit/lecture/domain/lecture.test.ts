@@ -1,9 +1,9 @@
-import { Category } from "../../../src/lecture/domain/category";
-import Enrollment from "../../../src/lecture/domain/enrollment";
-import { Instructor } from "../../../src/lecture/domain/instructor";
-import Lecture from "../../../src/lecture/domain/lecture";
-import { Status } from "../../../src/lecture/domain/status";
-import { Student } from "../../../src/lecture/domain/student";
+import { Category } from "../../../../src/lecture/domain/category";
+import Enrollment from "../../../../src/lecture/domain/enrollment";
+import { Instructor } from "../../../../src/lecture/domain/instructor";
+import Lecture from "../../../../src/lecture/domain/lecture";
+import { Status } from "../../../../src/lecture/domain/status";
+import { Student } from "../../../../src/lecture/domain/student";
 
 describe("lecture test", () => {
   beforeEach(() => {});
