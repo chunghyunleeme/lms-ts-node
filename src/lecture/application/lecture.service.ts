@@ -216,7 +216,6 @@ export default class LectureService {
     if (!lecture) {
       throw new CanNotFindLecture();
     }
-    console.log("lecture.enrollments = ", lecture.enrollments);
 
     const student = await this.studentService.findById(studentId);
     if (!student) {

@@ -192,7 +192,9 @@ export default class LectureRepository implements ILectureRepository {
     return this.mapToLectureDetail(lectureData, students);
   }
 
-  async findAll(param: LectureSearchRequest): Promise<LectureSummary[]> {
+  async findAll(
+    param: LectureSearchRequest
+  ): Promise<[LectureSummary[], number]> {
     const conn = await this.getConnection();
     let query =
       "SELECT DISTINCT l.id AS lecture_id, l.category, l.title, l.price, l.num_of_students, l.created_at, " +
@@ -223,6 +225,14 @@ export default class LectureRepository implements ILectureRepository {
       query += " AND e.student_id = ?";
       params.push(param.studentId);
     }
+
+    const countQuery =
+      "SELECT COUNT(*) AS count FROM " + query.split("FROM")[1];
+    const [countResult]: RowDataPacket[0] = await conn.query(
+      countQuery,
+      params
+    );
+    const count = countResult[0].count;
 
     if (param.sortBy) {
       const order = param.sortBy.startsWith("-") ? "DESC" : "ASC";
@@ -256,7 +266,7 @@ export default class LectureRepository implements ILectureRepository {
       return lecture;
     });
 
-    return lectures;
+    return [lectures, count];
   }
 
   private async fetchNumOfStudentsForLectures(

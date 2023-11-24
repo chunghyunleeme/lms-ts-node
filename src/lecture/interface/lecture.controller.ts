@@ -5,6 +5,8 @@ import { inject, singleton } from "tsyringe";
 import ILectureRepository from "../domain/repository/ilecture.repository";
 import { CanNotFindLecture } from "../../error/cannot-find-lecture.error";
 import LectureSearchRequest from "../domain/repository/dto/lecture.search";
+import LectureSummary from "../domain/repository/dto/lecture.summary";
+import { Page } from "../../common/page";
 @singleton()
 export default class LectureController {
   constructor(
@@ -101,10 +103,11 @@ export default class LectureController {
   async findAll(req: Request, res: Response, next: NextFunction) {
     try {
       const params: any = req.query;
-      console.log(params);
       const search = new LectureSearchRequest(params);
-      const result = await this.lectureRepository.findAll(search);
-      return res.status(200).json(result);
+      const [result, totalCount] = await this.lectureRepository.findAll(search);
+      return res
+        .status(200)
+        .json(new Page<LectureSummary>(totalCount, search.pageSize, result));
     } catch (e) {
       next(e);
     }

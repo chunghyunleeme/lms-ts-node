@@ -7,6 +7,9 @@ import AppConfig from "./app.config";
 const app: Application = express();
 AppConfig.init();
 app.use(express.json());
+app.get("/", (req, res) => {
+  res.send("hello inflab.");
+});
 app.use("/students", studentRouter);
 app.use("/lectures", lectureRouter);
 app.use(ErrorHandlerMiddleware);

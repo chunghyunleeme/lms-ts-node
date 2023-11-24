@@ -35,11 +35,11 @@ export default class LectureSearchRequest {
     }
     this._instructorName = instructorName;
     this._lectureTitle = lectureTitle;
-    this._studentId = studentId;
+    this._studentId = +studentId;
     this._category = category;
     this._sortBy = sortBy;
-    this._page = page;
-    this._pageSize = pageSize;
+    this._page = +page;
+    this._pageSize = +pageSize;
   }
 
   get instructorName() {

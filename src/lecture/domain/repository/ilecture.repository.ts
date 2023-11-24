@@ -33,5 +33,5 @@ export default interface ILectureRepository {
    */
 
   findByIdForDetail(id: number): Promise<LectureDetail | null>;
-  findAll(param: LectureSearchRequest): Promise<LectureSummary[]>;
+  findAll(param: LectureSearchRequest): Promise<[LectureSummary[], number]>;
 }
