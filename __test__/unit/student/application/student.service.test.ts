@@ -2,9 +2,8 @@ import { StudentService } from "../../../../src/student/application/student.serv
 import IStudentRepository from "../../../../src/student/domain/repository/istudent.repository";
 import { mock, when, instance } from "ts-mockito";
 import Student from "../../../../src/student/domain/student";
-import { AlreadyExistingEmail } from "../../../../src/error/already-existing-email.error";
-import { NotFoundError } from "../../../../src/http-error/not-found.error";
-import { CanNotFindStudent } from "../../../../src/error/cannot-find-student.error";
+import { AlreadyExistingEmail } from "../../../../src/common/error/already-existing-email.error";
+import { CanNotFindStudent } from "../../../../src/common/error/cannot-find-student.error";
 
 describe("student service test", () => {
   const studentRepository: IStudentRepository = mock<IStudentRepository>();

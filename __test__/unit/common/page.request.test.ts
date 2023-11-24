@@ -1,4 +1,4 @@
-import { PageRequest } from "../../../src/common/page.request";
+import { PageRequest } from "../../../src/common/pagination/page.request";
 
 describe("PageRequest", () => {
   it.each([

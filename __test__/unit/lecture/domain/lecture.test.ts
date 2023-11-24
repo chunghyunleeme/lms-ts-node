@@ -5,9 +5,7 @@ import Lecture from "../../../../src/lecture/domain/lecture";
 import { Status } from "../../../../src/lecture/domain/status";
 import { Student } from "../../../../src/lecture/domain/student";
 
-describe("lecture test", () => {
-  beforeEach(() => {});
-
+describe("Lecture", () => {
   it("강의 생성 테스트", () => {
     const instructor: Instructor = {
       id: "1",

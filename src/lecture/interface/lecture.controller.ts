@@ -3,10 +3,10 @@ import LectureService from "../application/lecture.service";
 import { Category } from "../domain/category";
 import { inject, singleton } from "tsyringe";
 import ILectureRepository from "../domain/repository/ilecture.repository";
-import { CanNotFindLecture } from "../../error/cannot-find-lecture.error";
+import { CanNotFindLecture } from "../../common/error/cannot-find-lecture.error";
 import LectureSearchRequest from "../domain/repository/dto/lecture.search";
 import LectureSummary from "../domain/repository/dto/lecture.summary";
-import { Page } from "../../common/page";
+import { Page } from "../../common/pagination/page";
 @singleton()
 export default class LectureController {
   constructor(

@@ -1,8 +1,8 @@
 import { inject, singleton } from "tsyringe";
 import IStudentRepository from "../domain/repository/istudent.repository";
 import Student from "../domain/student";
-import { AlreadyExistingEmail } from "../../error/already-existing-email.error";
-import { CanNotFindStudent } from "../../error/cannot-find-student.error";
+import { AlreadyExistingEmail } from "../../common/error/already-existing-email.error";
+import { CanNotFindStudent } from "../../common/error/cannot-find-student.error";
 
 @singleton()
 export class StudentService {

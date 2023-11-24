@@ -1,5 +1,5 @@
-import { PageRequest } from "../../../../common/page.request";
-import { BadRequestError } from "../../../../http-error/bad-request.error";
+import { PageRequest } from "../../../../common/pagination/page.request";
+import { BadRequestError } from "../../../../common/error/http-error/bad-request.error";
 import { Category } from "../../category";
 
 export default class LectureSearchRequest extends PageRequest {

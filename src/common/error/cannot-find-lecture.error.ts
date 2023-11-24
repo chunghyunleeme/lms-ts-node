@@ -1,4 +1,4 @@
-import { NotFoundError } from "../http-error/not-found.error";
+import { NotFoundError } from "./http-error/not-found.error";
 
 export class CanNotFindLecture extends NotFoundError {
   name = "CanNotFindLecture";

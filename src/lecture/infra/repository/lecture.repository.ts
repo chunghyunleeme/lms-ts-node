@@ -4,7 +4,7 @@ import ILectureRepository from "../../domain/repository/ilecture.repository";
 import db from "../../../db";
 import { FieldPacket, ResultSetHeader, RowDataPacket } from "mysql2";
 import { Status } from "../../domain/status";
-import { BadRequestError } from "../../../http-error/bad-request.error";
+import { BadRequestError } from "../../../common/error/http-error/bad-request.error";
 import { PoolConnection } from "mysql2/promise";
 import {
   EnrolledStudent,

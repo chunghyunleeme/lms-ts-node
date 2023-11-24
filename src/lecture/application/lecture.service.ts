@@ -6,9 +6,9 @@ import ILectureRepository from "../domain/repository/ilecture.repository";
 import { Status } from "../domain/status";
 import { IInstructorService } from "./adapter/iinstructor.service";
 import { IStudentService } from "./adapter/istudent.service";
-import { BadRequestError } from "../../http-error/bad-request.error";
-import { CanNotFindLecture } from "../../error/cannot-find-lecture.error";
-import { CanNotFindStudent } from "../../error/cannot-find-student.error";
+import { BadRequestError } from "../../common/error/http-error/bad-request.error";
+import { CanNotFindLecture } from "../../common/error/cannot-find-lecture.error";
+import { CanNotFindStudent } from "../../common/error/cannot-find-student.error";
 import { PoolConnection } from "mysql2/promise";
 
 @singleton()

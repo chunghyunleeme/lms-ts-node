@@ -1,4 +1,4 @@
-import { ConflictError } from "../http-error/conflict.error";
+import { ConflictError } from "./http-error/conflict.error";
 
 export class AlreadyExistingEmail extends ConflictError {
   name = "AlreadyExistingEmail";

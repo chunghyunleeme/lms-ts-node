@@ -1,4 +1,4 @@
-import { BadRequestError } from "../../http-error/bad-request.error";
+import { BadRequestError } from "../../common/error/http-error/bad-request.error";
 import { Category } from "./category";
 import Enrollment from "./enrollment";
 import { Instructor } from "./instructor";
