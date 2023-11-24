@@ -6,7 +6,6 @@ import { IInstructorService } from "../../../src/lecture/application/adapter/iin
 import Lecture from "../../../src/lecture/domain/lecture";
 import { Category } from "../../../src/lecture/domain/category";
 import { Status } from "../../../src/lecture/domain/status";
-import Money from "../../../src/lecture/domain/money";
 import { BadRequestError } from "../../../src/http-error/bad-request.error";
 import { CanNotFindLecture } from "../../../src/error/cannot-find-lecture.error";
 

@@ -1,4 +1,3 @@
-import { injectable, registry } from "tsyringe";
 import IStudentRepository from "../../domain/repository/istudent.repository";
 import Student from "../../domain/student";
 import db from "../../../db";
@@ -45,7 +44,7 @@ export default class StudentRepository implements IStudentRepository {
   }
 
   mapToDomainEntity(data: RowDataPacket) {
-    if (!data) {
+    if (!data || data.length == 0) {
       return null;
     }
 

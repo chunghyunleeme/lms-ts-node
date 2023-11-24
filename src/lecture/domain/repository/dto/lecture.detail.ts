@@ -1,4 +1,4 @@
-import { Category } from "../../domain/category";
+import { Category } from "../../category";
 
 export class LectureDetail {
   id: number;

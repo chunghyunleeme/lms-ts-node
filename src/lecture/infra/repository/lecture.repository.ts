@@ -9,9 +9,9 @@ import { PoolConnection } from "mysql2/promise";
 import {
   EnrolledStudent,
   LectureDetail,
-} from "../../interface/dto/lecture.detail";
-import LectureSummary from "../../interface/dto/lecture.summary";
-import { Category } from "../../domain/category";
+} from "../../domain/repository/dto/lecture.detail";
+import LectureSummary from "../../domain/repository/dto/lecture.summary";
+import LectureSearchRequest from "../../domain/repository/dto/lecture.search";
 
 export default class LectureRepository implements ILectureRepository {
   constructor() {}
@@ -142,8 +142,9 @@ export default class LectureRepository implements ILectureRepository {
   }
 
   private mapToEnrollments(data: RowDataPacket) {
-    if (!data || !data[0].enrollment_id || data.length == 0) {
-      return;
+    data = data.filter((e: any) => e.enrollment_id);
+    if (data.length == 0) {
+      return [];
     }
     const enrollments: Enrollment[] = [];
     for (let i = 0; i < data.length; ++i) {
@@ -191,17 +192,88 @@ export default class LectureRepository implements ILectureRepository {
     return this.mapToLectureDetail(lectureData, students);
   }
 
-  async findAll(): Promise<LectureSummary[]> {
+  async findAll(param: LectureSearchRequest): Promise<LectureSummary[]> {
     const conn = await this.getConnection();
-    const query =
-      "SELECT l.id AS lecture_id, l.category, l.title, l.price, l.num_of_students, l.created_at, " +
+    let query =
+      "SELECT DISTINCT l.id AS lecture_id, l.category, l.title, l.price, l.num_of_students, l.created_at, " +
       "i.name AS instructor_name " +
       "FROM lecture l " +
       "INNER JOIN instructor i ON l.instructor_id = i.id " +
+      "LEFT JOIN enrollment e ON l.id = e.lecture_id " +
       "WHERE l.status = ?";
-    const result = await conn.query(query, [Status.PUBLIC]);
+
+    const params: any[] = [Status.PUBLIC];
+
+    if (param.instructorName) {
+      query += " AND i.name LIKE ?";
+      params.push(`%${param.instructorName}%`);
+    }
+
+    if (param.lectureTitle) {
+      query += " AND l.title LIKE ?";
+      params.push(`%${param.lectureTitle}%`);
+    }
+
+    if (param.category) {
+      query += " AND l.category = ?";
+      params.push(param.category);
+    }
+
+    if (param.studentId) {
+      query += " AND e.student_id = ?";
+      params.push(param.studentId);
+    }
+
+    if (param.sortBy) {
+      const order = param.sortBy.startsWith("-") ? "DESC" : "ASC";
+      const field = param.sortBy.replace(/^-/, "");
+      query += ` ORDER BY ${field} ${order}`;
+    }
+
+    if (param.page && param.pageSize) {
+      const offset = (param.page - 1) * param.pageSize;
+      query += " LIMIT ? OFFSET ?";
+      params.push(+param.pageSize, offset);
+    }
+
+    const result = await conn.query(query, params);
     const lectureData: RowDataPacket[0] = result[0];
-    return this.mapToLectureSummaries(lectureData);
+
+    let lectures: LectureSummary[] = this.mapToLectureSummaries(lectureData);
+    const numOfStudentsResults: RowDataPacket[0] =
+      await this.fetchNumOfStudentsForLectures(
+        conn,
+        lectures.map((lecture) => lecture.id)
+      );
+
+    lectures = lectures.map((lecture) => {
+      const result = numOfStudentsResults.find(
+        (result: any) => result.lecture_id === lecture.id
+      );
+      if (result) {
+        return { ...lecture, numOfStudents: result.num_of_students };
+      }
+      return lecture;
+    });
+
+    return lectures;
+  }
+
+  private async fetchNumOfStudentsForLectures(
+    conn: PoolConnection,
+    lectureIds: number[]
+  ) {
+    if (lectureIds.length == 0) {
+      return;
+    }
+    const numOfStudentQuery =
+      "SELECT e.lecture_id, COUNT(e.student_id) as num_of_students " +
+      "FROM enrollment e " +
+      "INNER JOIN student s ON e.student_id = s.id AND s.deleted_at IS NULL " +
+      "WHERE e.lecture_id IN (?) " +
+      "GROUP BY e.lecture_id";
+    const [result] = await conn.query(numOfStudentQuery, [lectureIds]);
+    return result;
   }
 
   private mapToLectureDetail(

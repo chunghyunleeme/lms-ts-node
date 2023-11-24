@@ -1,8 +1,9 @@
-import { LectureDetail } from "../../interface/dto/lecture.detail";
-import LectureSummary from "../../interface/dto/lecture.summary";
+import { LectureDetail } from "./dto/lecture.detail";
+import LectureSummary from "./dto/lecture.summary";
 import Enrollment from "../enrollment";
 import Lecture from "../lecture";
 import { PoolConnection } from "mysql2/promise";
+import LectureSearchRequest from "./dto/lecture.search";
 
 export default interface ILectureRepository {
   save(lecture: Lecture, conn?: PoolConnection): Promise<number>;
@@ -32,5 +33,5 @@ export default interface ILectureRepository {
    */
 
   findByIdForDetail(id: number): Promise<LectureDetail | null>;
-  findAll(): Promise<LectureSummary[]>;
+  findAll(param: LectureSearchRequest): Promise<LectureSummary[]>;
 }
