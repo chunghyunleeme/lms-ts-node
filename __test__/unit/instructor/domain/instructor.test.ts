@@ -1,4 +1,4 @@
-import Instructor from "../../../src/instructor/domain/instructor";
+import Instructor from "../../../../src/instructor/domain/instructor";
 
 describe("instructor test", () => {
   test("교사 생성 테스트", () => {
