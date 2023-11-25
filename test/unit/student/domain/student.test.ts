@@ -1,6 +1,6 @@
 import Student from "../../../../src/student/domain/student";
 
-describe("student test", () => {
+describe("Student", () => {
   it("학생 생성 테스트", () => {
     const student = new Student({
       email: "chunghyun.dev@gmail.com",

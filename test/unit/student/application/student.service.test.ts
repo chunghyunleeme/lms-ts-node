@@ -5,7 +5,7 @@ import Student from "../../../../src/student/domain/student";
 import { AlreadyExistingEmail } from "../../../../src/common/error/already-existing-email.error";
 import { CanNotFindStudent } from "../../../../src/common/error/cannot-find-student.error";
 
-describe("student service test", () => {
+describe("StudentService", () => {
   const studentRepository: IStudentRepository = mock<IStudentRepository>();
   const studentService: StudentService = new StudentService(
     instance(studentRepository)
