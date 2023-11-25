@@ -12,6 +12,7 @@ import {
 } from "../../domain/repository/dto/lecture.detail";
 import LectureSummary from "../../domain/repository/dto/lecture.summary";
 import LectureSearchRequest from "../../domain/repository/dto/lecture.search";
+import Student from "../../domain/student";
 
 export default class LectureRepository implements ILectureRepository {
   constructor() {}
@@ -162,10 +163,7 @@ export default class LectureRepository implements ILectureRepository {
             createdAt: data[i].created_at,
             updatedAt: data[i].updated_at,
           }),
-          student: {
-            id: data[i].student_id,
-            nickName: data[i].student_nick_name,
-          },
+          student: new Student(data[i].student_id, data[i].student_nick_name),
           enrollmentDate: new Date(data[i].enrollment_date),
         })
       );

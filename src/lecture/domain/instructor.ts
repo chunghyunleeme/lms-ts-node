@@ -1,9 +1,13 @@
 export default class Instructor {
-  private id: string;
-  private name: string;
+  private _id: string;
+  private _name: string;
 
   constructor(id: string, name: string) {
-    this.id = id;
-    this.name = name;
+    this._id = id;
+    this._name = name;
+  }
+
+  get id() {
+    return this._id;
   }
 }
