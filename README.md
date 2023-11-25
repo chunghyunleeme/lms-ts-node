@@ -11,6 +11,7 @@ URL을 비롯해서 테이블명, 클래스명, 파일명, function명 등 아�
 
 ### 1.2. Directories
 
+```
 📦src
 ┣ 📂common
 ┃ ┣ 📂error
@@ -35,6 +36,7 @@ URL을 비롯해서 테이블명, 클래스명, 파일명, function명 등 아�
 ┣ 📜app.ts
 ┣ 📜db.ts
 ┗ 📜server.ts
+```
 
 ## 2. Installation
 
