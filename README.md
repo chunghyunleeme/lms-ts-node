@@ -143,11 +143,11 @@ Promise.all 이 아닌 Promise.allSettled을 사용하여, 모든 함수가 수�
 
 **테스트**
 
-도메인 계층 TDD로 개발
+도메인 클래스 TDD로 개발
 
 <img width="525" alt="image" src="https://github.com/chunghyunleeme/lms-ts-node/assets/134473987/40084c5a-a384-4ef0-a01f-7064d5644724">
 
-이외 계층 통합 테스트를 진행하려 했으나 커넥션 롤백의 문제로 고민중
+상위 계층 클래스 통합 테스트를 진행하려 했으나 DB 반영의 문제로 고민중
 
 ```
   beforeAll(async () => {
