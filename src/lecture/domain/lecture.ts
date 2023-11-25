@@ -15,7 +15,6 @@ export default class Lecture {
   private _desc: string;
   private _price: Money;
   private _status: Status;
-  private _numOfStudent: number;
   private _createdAt: Date;
   private _updatedAt: Date;
   private _deletedAt: Date | null;
@@ -38,7 +37,6 @@ export default class Lecture {
     this._desc = desc;
     this._price = new Money(price);
     this._category = category;
-    this._numOfStudent = 0;
     this._status = Status.PRIVATE;
     this._createdAt = new Date();
     this._updatedAt = new Date();
@@ -79,7 +77,6 @@ export default class Lecture {
     });
     lecture._id = id;
     lecture._status = status as Status;
-    lecture._numOfStudent = numberOfStudent;
     lecture._createdAt = createdAt;
     lecture._updatedAt = updatedAt;
     if (instructor) {
@@ -113,10 +110,6 @@ export default class Lecture {
 
   get category(): Category {
     return this._category;
-  }
-
-  get numOfStudent(): number {
-    return this._numOfStudent;
   }
 
   get enrollments(): Enrollment[] | undefined {
@@ -197,8 +190,6 @@ export default class Lecture {
       enrollmentDate: new Date(),
     });
     this._enrollments?.push(enrollment);
-
-    ++this._numOfStudent;
 
     return enrollment;
   }

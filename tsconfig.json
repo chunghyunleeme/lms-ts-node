@@ -2,7 +2,7 @@
   "exclude": [
     "./coverage",
     "./dist",
-    "./__test__",
+    "test",
     "jest.config.js",
     "jest.setup.ts",
     "jest.setup.js"
