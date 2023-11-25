@@ -19,15 +19,15 @@ URL을 비롯해서 테이블명, 클래스명, 파일명, function명 등 아�
 ┃ ┣ 📂pagination // 페이징 관련 클래스
 ┃ ┗ 📂util // 유틸 클래스
 ┣ 📂lecture // 강의 애그리거트
-┃ ┣ 📂application // 서비스
+┃ ┣ 📂application // 애플리케이션 계층
 ┃ ┃ ┣ 📂adapter // 외부 API 인터페이스
-┃ ┣ 📂domain // 도메인
+┃ ┣ 📂domain // 도메인 계층
 ┃ ┃ ┣ 📂repository // 레포지토리 인터페이스
 ┃ ┃ ┃ ┣ 📂dto // 검색 및 응답 dto
-┃ ┣ 📂infra // 인프라
+┃ ┣ 📂infra // 인프라 계층
 ┃ ┃ ┣ 📂adapter // 외부 API 구현체
 ┃ ┃ ┗ 📂repository // 레포지토리 구현체
-┃ ┣ 📂interface // 컨트롤러
+┃ ┣ 📂interface // 인터페이스 계층
 ┃ ┣ 📂routes // 라우터
 ┣ 📂student // 학생 애그리거트
 ┣ 📂instructor // 강사 애그리거트
@@ -42,10 +42,45 @@ URL을 비롯해서 테이블명, 클래스명, 파일명, function명 등 아�
 
 ### 2.1. NodeJS
 
+```
+SKIP
+```
+
 ### 2.2. MySQL
+
+```
+# PULL DOCKER MySQL IMAGE
+docker pull mysql
+
+# RUN DOCKER MySQL
+docker run --name mysql-lms -e MYSQL_ROOT_PASSWORD=1234 -d -p 3306:3306 mysql:latest
+```
 
 ### 2.3. Repository
 
+```
+# CLONE REPOSITORY
+git clone ${REPOSITORY}
+cd lms-ts-node
+
+# INSTALL DEPENDENCIES
+npm install
+
+# START DEVELOPMENT
+npm run dev
+```
+
 ### 2.4. Data
 
+```
+# Seed initial data
+npm run setup
+
+# Run test code
+npm run test
+
+```
+
 ## 3. Development
+
+### 3.1. Definition
