@@ -142,3 +142,40 @@ Promise.all 이 아닌 Promise.allSettled을 사용하여, 모든 함수가 수�
 ```
 
 **테스트**
+도메인 계층 TDD로 개발
+이외 계층 통합 테스트를 진행하려 했으나 커넥션 롤백의 문제로 고민중
+
+```
+  beforeAll(async () => {
+    AppConfig.init();
+    testConnectionPool = createConnection();
+  });
+
+  beforeEach(async () => {
+    lectureRepository = await container.resolve("LectureRepository");
+    instructorService = await container.resolve("InstructorService");
+    studentService = await container.resolve("StudentService");
+    lectureService = new LectureService(
+      lectureRepository,
+      instructorService,
+      studentService
+    );
+    Promise.all(
+      Array.from({ length: 30 }, async () => {
+        const conn = await testConnectionPool.getConnection();
+        connArr.push(conn);
+        conn.release();
+        conn.beginTransaction();
+      })
+    );
+  });
+
+  afterEach(async () => {
+    Promise.all(
+      connArr.map(async (conn) => {
+        await conn.rollback();
+        conn.release();
+      })
+    );
+  });
+```
