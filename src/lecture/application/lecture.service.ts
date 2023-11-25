@@ -22,8 +22,8 @@ export default class LectureService {
     private readonly studentService: IStudentService
   ) {}
 
-  // TODO. 병렬처리
-  // 1. 이터레이터에서 커넥션 각각 가져옴
+  // 병렬처리
+  // 1. 이터레이터에서 커넥션 각각 가져옴 + 트랜잭션 시작
   // 2. 배열에 가져온 커넥션 push
   // 3. Promise.allsettled에 reject 체크
   // 4. 커넥션 배열 전부 rollback
@@ -41,11 +41,14 @@ export default class LectureService {
       category: Category;
     }>
   ) {
-    const conn = await this.lectureRepository.getConnection();
-    try {
-      await conn.beginTransaction();
-      for (const lecture of lectures) {
-        await this.save({
+    const start = performance.now();
+    const connList: PoolConnection[] = [];
+    const result = await Promise.allSettled(
+      lectures.map(async (lecture) => {
+        const conn = await this.lectureRepository.getConnection();
+        connList.push(conn);
+        conn.beginTransaction();
+        return await this.save({
           instructorId: lecture.instructorId,
           title: lecture.title,
           desc: lecture.desc,
@@ -53,14 +56,28 @@ export default class LectureService {
           category: lecture.category,
           conn,
         });
-      }
-      await conn.commit();
-    } catch (e) {
-      await conn.rollback();
-      throw e;
-    } finally {
-      conn.release();
+      })
+    );
+
+    if (result.some((r) => r.status == "rejected")) {
+      Promise.all(
+        connList.map(async (c) => {
+          await c.rollback();
+          c.release();
+        })
+      );
+
+      throw new BadRequestError("입력값을 확인해주세요.");
     }
+
+    Promise.all(
+      connList.map(async (c) => {
+        await c.commit();
+        c.release();
+      })
+    );
+    const end = performance.now();
+    console.log(`save 병렬처리 속도: ${end - start} milliseconds.`);
   }
 
   /**
@@ -103,6 +120,7 @@ export default class LectureService {
       }),
       conn
     );
+    return;
   }
 
   /**

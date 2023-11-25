@@ -5,7 +5,7 @@ const pool: Pool = createPool({
   user: "root",
   password: "1234",
   database: "lms",
-  connectionLimit: 10,
+  connectionLimit: 30,
 });
 
 export default pool.promise();
