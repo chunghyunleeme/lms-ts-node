@@ -1,16 +1,13 @@
 import { Category } from "../../../../src/lecture/domain/category";
 import Enrollment from "../../../../src/lecture/domain/enrollment";
-import { Instructor } from "../../../../src/lecture/domain/instructor";
+import Instructor from "../../../../src/lecture/domain/instructor";
 import Lecture from "../../../../src/lecture/domain/lecture";
 import { Status } from "../../../../src/lecture/domain/status";
-import { Student } from "../../../../src/lecture/domain/student";
+import Student from "../../../../src/lecture/domain/student";
 
 describe("Lecture", () => {
   it("강의 생성 테스트", () => {
-    const instructor: Instructor = {
-      id: "1",
-      name: "테스트",
-    };
+    const instructor: Instructor = new Instructor("1", "테스트");
     const lecture = new Lecture({
       instructor,
       title: "테스트 강의",
@@ -28,10 +25,7 @@ describe("Lecture", () => {
 
   describe("강의 수정 테스트", () => {
     it("실패: 가격은 음수일 수 없습니다.", () => {
-      const instructor: Instructor = {
-        id: "1",
-        name: "테스트",
-      };
+      const instructor: Instructor = new Instructor("1", "테스트");
       const lecture = new Lecture({
         instructor,
         title: "테스트 강의",
@@ -51,10 +45,7 @@ describe("Lecture", () => {
 
     it("성공", () => {
       // given
-      const instructor: Instructor = {
-        id: "1",
-        name: "테스트",
-      };
+      const instructor: Instructor = new Instructor("1", "테스트");
       const lecture = new Lecture({
         instructor,
         title: "테스트 강의",
@@ -78,10 +69,7 @@ describe("Lecture", () => {
   describe("강의 삭제 테스트", () => {
     it("실패: 이미 수강생이 있는 경우", () => {
       // given
-      const student: Student = {
-        id: 1,
-        nickName: "test",
-      };
+      const student: Student = new Student(1, "test");
 
       const lecture: Lecture = Lecture.from({
         id: 1,
@@ -141,10 +129,7 @@ describe("Lecture", () => {
     });
   });
   it("강의 공개 테스트", () => {
-    const instructor: Instructor = {
-      id: "1",
-      name: "테스트",
-    };
+    const instructor: Instructor = new Instructor("1", "테스트");
     const lecture = new Lecture({
       instructor,
       title: "테스트 강의",
@@ -161,10 +146,7 @@ describe("Lecture", () => {
   describe("수강 신청 테스트", () => {
     it("실패: 비공개된 강의인 경우", () => {
       // given
-      const instructor: Instructor = {
-        id: "1",
-        name: "테스트 교사",
-      };
+      const instructor: Instructor = new Instructor("1", "테스트");
 
       const lecture = new Lecture({
         instructor,
@@ -174,10 +156,7 @@ describe("Lecture", () => {
         category: Category.APP,
       });
 
-      const student: Student = {
-        id: 1,
-        nickName: "test",
-      };
+      const student: Student = new Student(1, "test");
 
       // when, then
       expect(() => lecture.enrollment(student)).toThrow(Error);
@@ -185,10 +164,7 @@ describe("Lecture", () => {
 
     it("실패: 이미 수강 중인 경우", () => {
       // given
-      const student: Student = {
-        id: 1,
-        nickName: "test",
-      };
+      const student: Student = new Student(1, "test");
 
       const lecture: Lecture = Lecture.from({
         id: 1,
@@ -227,10 +203,7 @@ describe("Lecture", () => {
 
     it("실패: 수강 목록을 함께 조회하지 않은 경우", () => {
       // given
-      const student: Student = {
-        id: 1,
-        nickName: "test",
-      };
+      const student: Student = new Student(1, "test");
 
       const lecture: Lecture = Lecture.from({
         id: 1,
@@ -252,10 +225,7 @@ describe("Lecture", () => {
 
     it("성공", () => {
       // given
-      const instructor: Instructor = {
-        id: "1",
-        name: "테스트 교사",
-      };
+      const instructor: Instructor = new Instructor("1", "테스트");
 
       const lecture: Lecture = Lecture.from({
         id: 1,
@@ -271,10 +241,7 @@ describe("Lecture", () => {
       });
       lecture.open();
 
-      const student: Student = {
-        id: 1,
-        nickName: "test",
-      };
+      const student: Student = new Student(1, "test");
 
       // when
       const enrollment: Enrollment = lecture.enrollment(student);

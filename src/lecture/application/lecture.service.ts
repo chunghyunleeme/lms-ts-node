@@ -1,6 +1,6 @@
 import { inject, singleton } from "tsyringe";
 import { Category } from "../domain/category";
-import { Instructor } from "../domain/instructor";
+import Instructor from "../domain/instructor";
 import Lecture from "../domain/lecture";
 import ILectureRepository from "../domain/repository/ilecture.repository";
 import { Status } from "../domain/status";
