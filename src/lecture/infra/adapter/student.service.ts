@@ -1,7 +1,7 @@
 import { injectable } from "tsyringe";
 import { StudentService as ExternalStudentService } from "../../../student/application/student.service";
 import { IStudentService } from "../../application/adapter/istudent.service";
-import { Student } from "../../domain/student";
+import Student from "../../domain/student";
 
 @injectable()
 export default class StudentService implements IStudentService {
@@ -11,9 +11,6 @@ export default class StudentService implements IStudentService {
     if (!result) {
       return null;
     }
-    return {
-      id: result.id,
-      nickName: result.nickName,
-    };
+    return new Student(result.id, result.nickName);
   }
 }

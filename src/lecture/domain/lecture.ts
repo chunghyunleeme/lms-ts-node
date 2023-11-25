@@ -1,10 +1,10 @@
 import { BadRequestError } from "../../common/error/http-error/bad-request.error";
 import { Category } from "./category";
 import Enrollment from "./enrollment";
-import { Instructor } from "./instructor";
+import Instructor from "./instructor";
 import Money from "./money";
 import { Status } from "./status";
-import { Student } from "./student";
+import Student from "./student";
 
 export default class Lecture {
   private _id: number;

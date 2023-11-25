@@ -1,9 +1,13 @@
 export default class Student {
-  private id: number;
-  private nickName: string;
+  private _id: number;
+  private _nickName: string;
 
   constructor(id: number, nickName: string) {
-    this.id = id;
-    this.nickName = nickName;
+    this._id = id;
+    this._nickName = nickName;
+  }
+
+  get id() {
+    return this._id;
   }
 }

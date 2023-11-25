@@ -1,5 +1,5 @@
 import Lecture from "./lecture";
-import { Student } from "./student";
+import Student from "./student";
 
 export default class Enrollment {
   private _id: number;
