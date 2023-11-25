@@ -17,7 +17,6 @@ describe("Lecture", () => {
     });
 
     expect(lecture.title).toBe("테스트 강의");
-    expect(lecture.numOfStudent).toBe(0);
     expect(lecture.category).toBe(Category.APP);
     expect(lecture.instructor).toBe(instructor);
     expect(lecture.status).toBe(Status.PRIVATE);
@@ -249,7 +248,6 @@ describe("Lecture", () => {
       // then
       expect(enrollment.student).toBe(student);
       expect(enrollment.lecture).toBe(lecture);
-      expect(lecture.numOfStudent).toBe(1);
     });
   });
 });

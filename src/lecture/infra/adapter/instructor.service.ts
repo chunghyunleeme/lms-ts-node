@@ -1,7 +1,7 @@
 import { injectable } from "tsyringe";
 import { InstructorService as ExternalInstructorService } from "../../../instructor/application/instructor.service";
 import { IInstructorService } from "../../application/adapter/iinstructor.service";
-import { Instructor } from "../../domain/instructor";
+import Instructor from "../../domain/instructor";
 
 @injectable()
 export class InstructorService implements IInstructorService {
@@ -11,9 +11,6 @@ export class InstructorService implements IInstructorService {
     if (!result) {
       return null;
     }
-    return {
-      id: result.id,
-      name: result.name,
-    };
+    return new Instructor(result.id, result.name);
   }
 }

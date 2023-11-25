@@ -19,7 +19,7 @@ export default class LectureRepository implements ILectureRepository {
   async save(lecture: Lecture, conn?: PoolConnection): Promise<number> {
     const connection = conn ? conn : await this.getConnection();
     const query =
-      "INSERT INTO lecture (instructor_id, title, description, price, category, status, num_of_students, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      "INSERT INTO lecture (instructor_id, title, description, price, category, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     const [result]: [ResultSetHeader, FieldPacket[]] = await connection.query(
       query,
       [
@@ -29,7 +29,6 @@ export default class LectureRepository implements ILectureRepository {
         lecture.price.money,
         lecture.category,
         lecture.status,
-        lecture.numOfStudent,
         lecture.createdAt,
         lecture.updatedAt,
       ]

@@ -11,9 +11,9 @@ export class CreateLectureTable {
         price DECIMAL(10, 2), 
         category VARCHAR(50), 
         status VARCHAR(20), 
-        createdAt DATETIME not null default now(),
-        updatedAt DATETIME not null default now() on update now(),
-        deletedAt DATETIME, 
+        created_at DATETIME not null default now(),
+        updated_at DATETIME not null default now() on update now(),
+        deleted_at DATETIME, 
         FOREIGN KEY (instructor_id) REFERENCES instructor(id) )`
     );
 

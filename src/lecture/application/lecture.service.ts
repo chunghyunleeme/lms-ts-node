@@ -143,7 +143,6 @@ export default class LectureService {
     const promiseSettledResult: PromiseSettledResult<void>[] = [];
     for (let i = 0; i < lectures.length / NUM_OF_CONN; i++) {
       const lectureChunk = chunkAll[i];
-      console.log(`lectureChunk[${i}] = `, lectureChunk);
       const result = await Promise.allSettled(
         lectureChunk.map(async (lecture, index) => {
           const conn = connList[index];
