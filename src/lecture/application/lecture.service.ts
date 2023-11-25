@@ -10,6 +10,7 @@ import { BadRequestError } from "../../common/error/http-error/bad-request.error
 import { CanNotFindLecture } from "../../common/error/cannot-find-lecture.error";
 import { CanNotFindStudent } from "../../common/error/cannot-find-student.error";
 import { PoolConnection } from "mysql2/promise";
+import ArrayUtil from "../../common/util/array.util";
 
 @singleton()
 export default class LectureService {
@@ -22,7 +23,41 @@ export default class LectureService {
     private readonly studentService: IStudentService
   ) {}
 
-  // 병렬처리
+  async saveLectures(
+    lectures: Array<{
+      instructorId: string;
+      title: string;
+      desc: string;
+      price: number;
+      category: Category;
+    }>
+  ) {
+    const start = performance.now();
+    const conn = await this.lectureRepository.getConnection();
+    try {
+      await conn.beginTransaction();
+      for (const lecture of lectures) {
+        await this.save({
+          instructorId: lecture.instructorId,
+          title: lecture.title,
+          desc: lecture.desc,
+          price: lecture.price,
+          category: lecture.category,
+          conn,
+        });
+      }
+      await conn.commit();
+    } catch (e) {
+      await conn.rollback();
+      throw e;
+    } finally {
+      conn.release();
+    }
+    const end = performance.now();
+    console.log(`save 직렬처리 속도: ${end - start} milliseconds.`);
+  }
+
+  // 커넥션 개수 제한 5개 병렬처리
   // 1. 이터레이터에서 커넥션 각각 가져옴 + 트랜잭션 시작
   // 2. 배열에 가져온 커넥션 push
   // 3. Promise.allsettled에 reject 체크
@@ -32,7 +67,75 @@ export default class LectureService {
    * 한개의 강의는 길이 1 배열
    * @param lectures
    */
-  async saveLectures(
+  async saveLecturesInParallelWith5(
+    lectures: Array<{
+      instructorId: string;
+      title: string;
+      desc: string;
+      price: number;
+      category: Category;
+    }>
+  ) {
+    const start = performance.now();
+    const maxNumOfConn = 5;
+
+    const connList: PoolConnection[] = [];
+    Array.from({ length: maxNumOfConn }, async () => {
+      const conn = await this.lectureRepository.getConnection();
+      conn.beginTransaction();
+      connList.push(conn);
+      return conn;
+    });
+
+    console.log(
+      "lectures.length / maxNumOfConn = ",
+      lectures.length / maxNumOfConn
+    );
+
+    const chunkAll = ArrayUtil.chunk(lectures, maxNumOfConn);
+
+    const promiseSettledResult: PromiseSettledResult<void>[] = [];
+    for (let i = 0; i < lectures.length / maxNumOfConn; i++) {
+      const lectureChunk = chunkAll[i];
+      console.log(`lectureChunk[${i}] = `, lectureChunk);
+      const result = await Promise.allSettled(
+        lectureChunk.map(async (lecture, index) => {
+          const conn = connList[index];
+          return await this.save({
+            instructorId: lecture.instructorId,
+            title: lecture.title,
+            desc: lecture.desc,
+            price: lecture.price,
+            category: lecture.category,
+            conn,
+          });
+        })
+      );
+      promiseSettledResult.push(...result);
+    }
+
+    if (promiseSettledResult.some((r) => r.status == "rejected")) {
+      Promise.all(
+        connList.map(async (c) => {
+          await c.rollback();
+          c.release();
+        })
+      );
+
+      throw new BadRequestError("입력값을 확인해주세요.");
+    }
+
+    Promise.all(
+      connList.map(async (c) => {
+        await c.commit();
+        c.release();
+      })
+    );
+    const end = performance.now();
+    console.log(`save 5개 병렬처리 속도: ${end - start} milliseconds.`);
+  }
+
+  async saveLecturesInParallel(
     lectures: Array<{
       instructorId: string;
       title: string;

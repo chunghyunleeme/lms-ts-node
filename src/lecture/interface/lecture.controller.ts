@@ -47,7 +47,7 @@ export default class LectureController {
         })
       );
 
-      await this.lectureService.saveLectures(lectures);
+      await this.lectureService.saveLecturesInParallelWith5(lectures);
       return res.status(201).json();
     } catch (e) {
       next(e);
