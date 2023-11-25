@@ -78,9 +78,10 @@ npm run setup
 
 # Run test code
 npm run test
-
 ```
 
 ## 3. Development
 
-### 3.1. Definition
+### 3.1. ERD
+
+![Alt text](image.png)

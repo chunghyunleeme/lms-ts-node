@@ -6,9 +6,9 @@ export class CreateInstructorTable {
       `CREATE TABLE IF NOT EXISTS instructor (
         id INT PRIMARY KEY AUTO_INCREMENT,
         name VARCHAR(255) NOT NULL,
-          createdAt DATETIME not null default now(),
-          updatedAt DATETIME not null default now() on update now(),
-          deletedAt DATETIME
+          created_at DATETIME not null default now(),
+          updated_at DATETIME not null default now() on update now(),
+          deleted_at DATETIME
       )`
     );
   }

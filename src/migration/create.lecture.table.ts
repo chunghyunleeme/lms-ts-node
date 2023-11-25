@@ -21,14 +21,14 @@ export class CreateLectureTable {
     await conn.query(`
     CREATE TABLE IF NOT EXISTS enrollment (
         id INT PRIMARY KEY AUTO_INCREMENT,
-      student_id INT,
-      lecture_id INT,
-      enrollment_date DATE NOT NULL,
-        createdAt DATETIME not null default now(),
-        updatedAt DATETIME not null default now() on update now(),
-        deletedAt DATETIME, 
-      FOREIGN KEY (student_id) REFERENCES student(id),
-      FOREIGN KEY (lecture_id) REFERENCES lecture(id)
+        student_id INT,
+        lecture_id INT,
+        enrollment_date DATE NOT NULL,
+        created_at DATETIME not null default now(),
+        updated_at DATETIME not null default now() on update now(),
+        deleted_at DATETIME, 
+        FOREIGN KEY (student_id) REFERENCES student(id),
+        FOREIGN KEY (lecture_id) REFERENCES lecture(id)
     )`);
   }
 

@@ -5,11 +5,11 @@ export class CreateStudentTable {
     await conn.query(
       `CREATE TABLE IF NOT EXISTS student (
         id INT PRIMARY KEY AUTO_INCREMENT,
-        name VARCHAR(255) NOT NULL,
+        nick_name VARCHAR(255) NOT NULL,
         email VARCHAR(255) UNIQUE NULL,
-        createdAt DATETIME not null default now(),
-        updatedAt DATETIME not null default now() on update now(),
-        deletedAt DATETIME
+        created_at DATETIME not null default now(),
+        updated_at DATETIME not null default now() on update now(),
+        deleted_at DATETIME
     )`
     );
   }
