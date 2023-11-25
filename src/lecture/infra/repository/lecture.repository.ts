@@ -1,7 +1,6 @@
 import Enrollment from "../../domain/enrollment";
 import Lecture from "../../domain/lecture";
 import ILectureRepository from "../../domain/repository/ilecture.repository";
-import db from "../../../db";
 import { FieldPacket, ResultSetHeader, RowDataPacket } from "mysql2";
 import { Status } from "../../domain/status";
 import { BadRequestError } from "../../../common/error/http-error/bad-request.error";
@@ -13,6 +12,7 @@ import {
 import LectureSummary from "../../domain/repository/dto/lecture.summary";
 import LectureSearchRequest from "../../domain/repository/dto/lecture.search";
 import Student from "../../domain/student";
+import { pool } from "../../../db";
 
 export default class LectureRepository implements ILectureRepository {
   constructor() {}
@@ -61,7 +61,7 @@ export default class LectureRepository implements ILectureRepository {
   }
 
   async findByTitle(title: string): Promise<Lecture | null> {
-    const result = await db.query("SELECT * FROM lecture WHERE title = ?", [
+    const result = await pool.query("SELECT * FROM lecture WHERE title = ?", [
       title,
     ]);
     const lectureData: RowDataPacket[0] = result[0];
@@ -335,10 +335,10 @@ export default class LectureRepository implements ILectureRepository {
   }
 
   async getConnection(): Promise<PoolConnection> {
-    return await db.getConnection();
+    return await pool.getConnection();
   }
 
   async closeConnection() {
-    await db.end();
+    await pool.end();
   }
 }

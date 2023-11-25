@@ -1,11 +1,14 @@
-import { createPool, Pool } from "mysql2";
+import { Pool, createPool } from "mysql2/promise";
 
-const pool: Pool = createPool({
-  host: "localhost",
-  user: "root",
-  password: "1234",
-  database: "lms",
-  connectionLimit: 30,
-});
+export let pool: Pool;
 
-export default pool.promise();
+export function createConnection(): Pool {
+  pool = createPool({
+    host: "localhost",
+    user: "root",
+    password: "1234",
+    database: "lms",
+    connectionLimit: 30,
+  });
+  return pool;
+}
