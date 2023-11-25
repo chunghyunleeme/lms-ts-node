@@ -7,6 +7,7 @@ import { CanNotFindLecture } from "../../common/error/cannot-find-lecture.error"
 import LectureSearchRequest from "../domain/repository/dto/lecture.search";
 import LectureSummary from "../domain/repository/dto/lecture.summary";
 import { Page } from "../../common/pagination/page";
+import { BadRequestError } from "../../common/error/http-error/bad-request.error";
 @singleton()
 export default class LectureController {
   constructor(
@@ -23,10 +24,29 @@ export default class LectureController {
         price: number;
         category: Category;
       }> = req.body;
+
+      /**
+       * 요청 검증
+       */
       const MAX_SAVE_COUNT = 10;
       if (MAX_SAVE_COUNT < lectures.length) {
-        throw new Error("최대 등록 가능 갯수는 10개입니다.");
+        throw new BadRequestError("최대 등록 가능 갯수는 10개입니다.");
       }
+      Promise.all(
+        lectures.map((lecture) => {
+          if (
+            !lecture.instructorId ||
+            !lecture.title ||
+            !lecture.desc ||
+            !lecture.price ||
+            !lecture.category ||
+            typeof lecture.price != "number"
+          ) {
+            throw new BadRequestError("입력값을 다시 확인해 주세요.");
+          }
+        })
+      );
+
       await this.lectureService.saveLectures(lectures);
       return res.status(201).json();
     } catch (e) {
@@ -40,10 +60,21 @@ export default class LectureController {
     next: NextFunction
   ): Promise<Response> {
     try {
-      const id = req.params["id"];
+      const id = +req.params.id;
       const { title, desc, price } = req.body;
+
+      /**
+       * 요청 검증
+       */
+      if (typeof id != "number") {
+        throw new BadRequestError("잘못된 URL입니다.");
+      }
+      if (price && typeof price != null) {
+        throw new BadRequestError("입력값을 다시 확인해 주세요.");
+      }
+
       await this.lectureService.update({
-        lectureId: parseInt(id),
+        lectureId: id,
         title,
         desc,
         price,
@@ -56,7 +87,15 @@ export default class LectureController {
 
   async openLecture(req: Request, res: Response, next: NextFunction) {
     try {
-      const id: number = parseInt(req.params["id"]);
+      const id: number = +req.params.id;
+
+      /**
+       * 요청 검증
+       */
+      if (typeof id != "number") {
+        throw new BadRequestError("잘못된 URL입니다.");
+      }
+
       await this.lectureService.open(id);
       return res.status(200).json();
     } catch (e) {
@@ -70,6 +109,23 @@ export default class LectureController {
         studentId,
         lectureIds,
       }: { studentId: number; lectureIds: number[] } = req.body;
+
+      /**
+       * 요청 검증
+       */
+      if (typeof studentId != "number") {
+        throw new BadRequestError("입력값을 다시 확인해 주세요.");
+      }
+      if (
+        lectureIds.some((lectureId) => {
+          if (typeof lectureId != "number") {
+            return true;
+          }
+        })
+      ) {
+        throw new BadRequestError("입력값을 다시 확인해 주세요.");
+      }
+
       await this.lectureService.enrollLectures({ lectureIds, studentId });
       return res.status(201).json();
     } catch (e) {
@@ -79,7 +135,15 @@ export default class LectureController {
 
   async deleteLecture(req: Request, res: Response, next: NextFunction) {
     try {
-      const id: number = parseInt(req.params["id"]);
+      const id: number = +req.params.id;
+
+      /**
+       * 요청 검증
+       */
+      if (typeof id != "number") {
+        throw new BadRequestError("잘못된 URL입니다.");
+      }
+
       await this.lectureService.delete(id);
       return res.status(200).json();
     } catch (e) {
@@ -89,7 +153,15 @@ export default class LectureController {
 
   async findById(req: Request, res: Response, next: NextFunction) {
     try {
-      const id: number = parseInt(req.params.id);
+      const id: number = +req.params.id;
+
+      /**
+       * 요청 검증
+       */
+      if (typeof id != "number") {
+        throw new BadRequestError("잘못된 URL입니다.");
+      }
+
       const result = await this.lectureRepository.findByIdForDetail(id);
       if (!result) {
         throw new CanNotFindLecture();

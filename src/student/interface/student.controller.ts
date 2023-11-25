@@ -11,7 +11,7 @@ export default class StudentController {
     try {
       const { email, nickName }: CreateStudentDto = req.body;
       if (!email || !nickName) {
-        throw new BadRequestError("이메일과 닉네임은 필수값입니다.");
+        throw new BadRequestError("입력값을 다시 확인해 주세요.");
       }
       const result = await this.studentService.join(email, nickName);
       return res.status(201).json({
@@ -24,11 +24,11 @@ export default class StudentController {
 
   async withdrawal(req: Request, res: Response, next: NextFunction) {
     try {
-      const id = req.params.id;
-      if (!id) {
-        throw new BadRequestError("id는 필수값입니다.");
+      const id = +req.params.id;
+      if (typeof id != "number") {
+        throw new BadRequestError("잘못된 URL입니다.");
       }
-      await this.studentService.withdraw(parseInt(id));
+      await this.studentService.withdraw(id);
       return res.status(200).json();
     } catch (e: any) {
       next(e);

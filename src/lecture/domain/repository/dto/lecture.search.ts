@@ -27,10 +27,10 @@ export default class LectureSearchRequest extends PageRequest {
     pageSize: number;
   }) {
     super();
-    if (page < 1) {
+    if (+page < 1) {
       throw new BadRequestError("페이지는 1보다 작을 수 없습니다.");
     }
-    if (pageSize < 0) {
+    if (+pageSize < 0) {
       throw new BadRequestError("페이지크기는 0보다 작을 수 없습니다.");
     }
     this._instructorName = instructorName;
