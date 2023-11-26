@@ -48,8 +48,6 @@ describe("LectureService", () => {
     );
   });
 
-  afterAll(async () => {});
-
   describe("강의 등록 테스트", () => {
     it("강의 등록 테스트", async () => {
       try {

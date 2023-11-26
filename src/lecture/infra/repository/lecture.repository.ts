@@ -259,6 +259,9 @@ export default class LectureRepository implements ILectureRepository {
       if (result) {
         return { ...lecture, numOfStudents: result.num_of_students };
       }
+      if (!result) {
+        return { ...lecture, numOfStudents: 0 };
+      }
       return lecture;
     });
 

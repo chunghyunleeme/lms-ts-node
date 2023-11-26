@@ -5,25 +5,15 @@ import lectureRouter from "./lecture/routes/lecture.router";
 import ErrorHandlerMiddleware from "./middleware/error.handler.middleware";
 import AppConfig from "./app.config";
 import { createConnection } from "./db";
-// const app: Application = express();
-// AppConfig.init();
-// app.use(express.json());
-// app.get("/", (req, res) => {
-//   res.send("hello inflab.");
-// });
-// app.use("/students", studentRouter);
-// app.use("/lectures", lectureRouter);
-// app.use(ErrorHandlerMiddleware);
-// export default app;
-
 export default class App {
   app: Application;
 
   constructor() {
     this.app = express();
     this.setDatabase();
-    this.setMiddleWare();
+    this.app.use(express.json());
     this.setRouter();
+    this.setMiddleWare();
     AppConfig.init();
   }
 
@@ -36,7 +26,6 @@ export default class App {
   }
 
   setMiddleWare() {
-    this.app.use(express.json());
     this.app.use(ErrorHandlerMiddleware);
   }
 

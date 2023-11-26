@@ -10,7 +10,13 @@ export default class StudentController {
   async createStudent(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, nickName }: CreateStudentDto = req.body;
+      console.log(req.body);
       if (!email || !nickName) {
+        throw new BadRequestError("입력값을 다시 확인해 주세요.");
+      }
+      let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
+
+      if (!regex.test(email)) {
         throw new BadRequestError("입력값을 다시 확인해 주세요.");
       }
       const result = await this.studentService.join(email, nickName);
@@ -18,6 +24,7 @@ export default class StudentController {
         id: result,
       });
     } catch (e: any) {
+      console.log("error = ", e);
       next(e);
     }
   }
