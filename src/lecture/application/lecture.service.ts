@@ -12,6 +12,7 @@ import { CanNotFindStudent } from "../../common/error/cannot-find-student.error"
 import { PoolConnection } from "mysql2/promise";
 import ArrayUtil from "../../common/util/array.util";
 import CanNotFindInstructor from "../../common/error/cannot-find-instructor.error";
+import AlreadyExistingTitle from "../../common/error/already-existing-title.error";
 
 @singleton()
 export default class LectureService {
@@ -208,7 +209,7 @@ export default class LectureService {
 
     const lecture = await this.lectureRepository.findByTitle(title);
     if (lecture) {
-      throw new Error("이미 존재하는 강의명입니다.");
+      throw new AlreadyExistingTitle();
     }
 
     await this.lectureRepository.save(

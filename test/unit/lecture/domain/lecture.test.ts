@@ -1,3 +1,4 @@
+import ExistingStudentLecture from "../../../../src/common/error/existing-student-lecture.error";
 import { Category } from "../../../../src/lecture/domain/category";
 import Enrollment from "../../../../src/lecture/domain/enrollment";
 import Instructor from "../../../../src/lecture/domain/instructor";
@@ -100,9 +101,7 @@ describe("Lecture", () => {
       });
 
       // when, then
-      expect(() => lecture.delete()).toThrow(
-        new Error("이미 수강생이 존재하는 강의는 삭제 할 수 없습니다.")
-      );
+      expect(() => lecture.delete()).toThrow(new ExistingStudentLecture());
     });
 
     it("성공", () => {

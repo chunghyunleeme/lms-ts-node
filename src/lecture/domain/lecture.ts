@@ -1,4 +1,7 @@
+import AlreadyEnrollLecture from "../../common/error/already-enroll-lecture.error";
+import ExistingStudentLecture from "../../common/error/existing-student-lecture.error";
 import { BadRequestError } from "../../common/error/http-error/bad-request.error";
+import PrivateLectureError from "../../common/error/private-lecture.error";
 import { Category } from "./category";
 import Enrollment from "./enrollment";
 import Instructor from "./instructor";
@@ -164,7 +167,7 @@ export default class Lecture {
     }
 
     if (this._enrollments.length != 0) {
-      throw new Error("이미 수강생이 존재하는 강의는 삭제 할 수 없습니다.");
+      throw new ExistingStudentLecture();
     }
   }
 
@@ -174,14 +177,14 @@ export default class Lecture {
     }
 
     if (this._status == Status.PRIVATE) {
-      throw new Error("비공개된 강의는 수강 신청할 수 없습니다.");
+      throw new PrivateLectureError();
     }
 
     const alreadyEnroll: boolean = this._enrollments.some((enrollment) => {
       return enrollment.student.id == student.id;
     });
     if (alreadyEnroll) {
-      throw new Error("이미 수강 중인 강의는 신청할 수 없습니다.");
+      throw new AlreadyEnrollLecture();
     }
 
     const enrollment = new Enrollment({
