@@ -11,6 +11,7 @@ import { CanNotFindLecture } from "../../common/error/cannot-find-lecture.error"
 import { CanNotFindStudent } from "../../common/error/cannot-find-student.error";
 import { PoolConnection } from "mysql2/promise";
 import ArrayUtil from "../../common/util/array.util";
+import CanNotFindInstructor from "../../common/error/cannot-find-instructor.error";
 
 @singleton()
 export default class LectureService {
@@ -202,7 +203,7 @@ export default class LectureService {
       instructorId
     );
     if (!instructor) {
-      throw new Error("존재하지 않는 강사입니다.");
+      throw new CanNotFindInstructor();
     }
 
     const lecture = await this.lectureRepository.findByTitle(title);
